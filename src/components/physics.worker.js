@@ -17,6 +17,10 @@ let height = 150
 let aspect = 1
 let stopLoop = false
 
+// Feature: emitCollisionEvents — tracks contact pairs from the previous tick
+// to suppress resting-contact spam (only new contacts fire an event).
+let activeContacts = new Set()
+
 const defaultOptions = {
 	size: 9.5,
 	startingHeight: 8,
@@ -29,6 +33,7 @@ const defaultOptions = {
 	linearDamping: .5,
 	angularDamping: .4,
 	settleTimeout: 5000,
+	emitCollisionEvents: false,
 	// TODO: toss: "center", "edge", "allEdges"
 }
 
@@ -511,6 +516,7 @@ const clearDice = () => {
 	// clear cache arrays
 	bodies = []
 	sleepingBodies = []
+	activeContacts = new Set()
 }
 
 
@@ -540,55 +546,68 @@ const update = (delta) => {
 
 	diceBufferView[0] = bodies.length
 
-	// Detect collisions
-    const numManifolds = physicsWorld.getDispatcher().getNumManifolds();
-    for (let i = 0; i < numManifolds; i++) {
-        const contactManifold = physicsWorld.getDispatcher().getManifoldByIndexInternal(i);
-        const body0 = Ammo.castObject(contactManifold.getBody0(), Ammo.btRigidBody);
-        const body1 = Ammo.castObject(contactManifold.getBody1(), Ammo.btRigidBody);
+	// Feature: emitCollisionEvents
+	// Only runs when the flag is enabled — zero overhead otherwise.
+	if (config.emitCollisionEvents) {
+		const nextContacts = new Set()
+		const MAX_EVENTS_PER_TICK = 4
+		// Normalisation cap: empirically ~20 for default throw/mass settings.
+		const IMPULSE_CAP = 20
+		const IMPULSE_MIN = 0.3
+		let emitted = 0
 
-        const rb0Id = body0.id;
-        const rb1Id = body1.id;
+		const categorize = (id) => {
+			if (typeof id === 'string' && id.startsWith('box_')) {
+				return id === 'box_bottom' ? 'floor' : 'wall'
+			}
+			return 'die'
+		}
 
-        let totalForce = 0;
+		const numManifolds = physicsWorld.getDispatcher().getNumManifolds()
+		for (let i = 0; i < numManifolds; i++) {
+			const manifold = physicsWorld.getDispatcher().getManifoldByIndexInternal(i)
+			const numContacts = manifold.getNumContacts()
+			if (numContacts === 0) continue
 
-        // Calculate collision force
-        const numContacts = contactManifold.getNumContacts();
-        for (let j = 0; j < numContacts; j++) {
-            const contactPoint = contactManifold.getContactPoint(j);
+			const b0 = Ammo.castObject(manifold.getBody0(), Ammo.btRigidBody)
+			const b1 = Ammo.castObject(manifold.getBody1(), Ammo.btRigidBody)
+			const id0 = b0.id, id1 = b1.id
 
-            // Check if the contact point indicates collision (penetration depth)
-            if (contactPoint.getDistance() < 0) {
-                // Relative velocity of the two bodies at the contact point
-                const normal = contactPoint.get_m_normalWorldOnB();
+			// Order-independent key for dedup
+			const key = String(id0) <= String(id1) ? `${id0}~${id1}` : `${id1}~${id0}`
+			nextContacts.add(key)
 
-                const velocity0 = body0.getLinearVelocity();
-                const velocity1 = body1.getLinearVelocity();
+			// Only fire for new contacts; resting contacts (key already active) are skipped
+			if (activeContacts.has(key)) continue
+			if (emitted >= MAX_EVENTS_PER_TICK) continue
 
-                // Calculate relative velocity
-                const relativeVelocity = new Ammo.btVector3();
-                relativeVelocity.setValue(
-                    velocity0.x() - velocity1.x(),
-                    velocity0.y() - velocity1.y(),
-                    velocity0.z() - velocity1.z()
-                );
+			// Find the highest-impulse contact point
+			let maxImpulse = 0
+			let pos = null
+			for (let j = 0; j < numContacts; j++) {
+				const cp = manifold.getContactPoint(j)
+				if (cp.getDistance() >= 0) continue
+				const imp = Math.abs(cp.getAppliedImpulse())
+				if (imp > maxImpulse) {
+					maxImpulse = imp
+					const p = cp.getPositionWorldOnB()
+					pos = [p.x(), p.y(), p.z()]
+				}
+			}
 
-                // Calculate the force (F = m * a) based on velocity and collision normal
-                const collisionForce = normal.dot(relativeVelocity);
-                totalForce += Math.abs(collisionForce);  // Add to total collision force
-							}
-						}
-						
-        if (totalForce > 0) {
-            // Send the collision data to the main thread
-            self.postMessage({
-                action: "collision",
-                body0Id: rb0Id,
-                body1Id: rb1Id,
-                force: totalForce
-            });
-        }
-    }
+			if (maxImpulse < IMPULSE_MIN) continue
+
+			self.postMessage({
+				action: 'collision',
+				strength: Math.min(1, maxImpulse / IMPULSE_CAP),
+				position: pos || [0, 0, 0],
+				bodies: [categorize(id0), categorize(id1)]
+			})
+			emitted++
+		}
+
+		activeContacts = nextContacts
+	}
 
 	// looping backwards since bodies are removed as they are put to sleep
 	for (let i = bodies.length - 1; i >= 0; i--) {

@@ -142,11 +142,15 @@ class WorldFacade {
 				case "init-complete":
 					this.#dicePhysicsResolve(); // fulfill promise so other things can run
 					break;
-				case "collision": // Handle collision events from the worker
-                    if (this.onCollision) {
-                        this.onCollision(e.data.body0Id, e.data.body1Id, e.data.force);
-                    }
-                    break;
+				case "collision":
+					// Only forwarded when emitCollisionEvents is true (the physics worker guards the source).
+					this.onCollision({
+						type: 'collision',
+						strength: e.data.strength,
+						position: e.data.position,
+						bodies: e.data.bodies
+					})
+					break;
 			}
     }
 		// initialize the AmmoJS physics worker

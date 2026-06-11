@@ -382,9 +382,9 @@ class WorldOnscreen {
 	async handleAsleep(die){
 		// mark this die as asleep
 		die.asleep = true
-	
-		// get the roll result for this die
-		await Dice.getRollResult(die, this.#scene)
+
+		// get the roll result for this die; pass config so optional features (highlightResult) can activate
+		await Dice.getRollResult(die, this.#scene, this.config)
 	
 		if(die.d10Instance || die.dieParent) {
 			// if one of the pair is asleep and the other isn't then it falls through without getting the roll result
