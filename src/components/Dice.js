@@ -286,15 +286,16 @@ class Dice {
     const nudge = (d4FaceDown && d.dieType === 'd4') ? -0.12 : 0.12
     faceCenter.y += nudge
 
-    // Point light at the face centroid — illuminates only the winning face from close up.
-    // Avoids geometry artifacts (no billboard plane, no white ring) and feels natural.
+    // Point light at the face centroid — illuminates the winning face from close up.
+    // includedOnlyMeshes is intentionally NOT set: d.mesh is the root/parent node and
+    // setting it would exclude the actual geometry child meshes, making the light invisible.
+    // The limited range already confines it to the immediate die area.
     const light = new PointLight(`_glow_light_${d.id}`, faceCenter, scene)
     const c3 = Color3.FromHexString(color)
-    light.diffuse         = c3
-    light.specular        = c3
-    light.intensity       = intensity * 10 // point lights need higher intensity than material alpha
-    light.range           = d.config.scale * 2.8
-    light.includedOnlyMeshes = [d.mesh]   // only lights this die, not the floor/walls
+    light.diffuse   = c3
+    light.specular  = c3
+    light.intensity = intensity * 20
+    light.range     = d.config.scale * 3
 
     const startTime = Date.now()
     let disposed = false

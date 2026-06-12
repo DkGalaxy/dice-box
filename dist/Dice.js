@@ -34073,7 +34073,7 @@ di = new WeakSet(), Es = function(e, t, i, s, r) {
   const u = i && e.dieType === "d4" ? -0.12 : 0.12;
   c.y += u;
   const d = new Wi(`_glow_light_${e.id}`, c, s), g = ee.FromHexString(a);
-  d.diffuse = g, d.specular = g, d.intensity = o * 10, d.range = e.config.scale * 2.8, d.includedOnlyMeshes = [e.mesh];
+  d.diffuse = g, d.specular = g, d.intensity = o * 20, d.range = e.config.scale * 3;
   const f = Date.now();
   let m = !1;
   const b = () => {
