@@ -273,18 +273,28 @@ class Dice {
     const intensity = hlConfig.intensity  ?? 0.9
     const durationMs = hlConfig.durationMs ?? 3500
 
-    // Face centroid: use ray pick point when available, fall back to die-centre + half-scale offset
+    // Face centroid. IMPORTANT: picked.pickedPoint lies on the pick HITBOX, which is an
+    // instance of the collider mesh. loadModels() shrinks collider sources by 0.9 and the
+    // hitbox is never multiplied by config.scale (the visual die instance is — see
+    // createInstance()). At config.scale 6 the hitbox is ~6.7x smaller than the visible
+    // die, so the raw pickedPoint sits deep INSIDE the mesh. A point light inside an
+    // opaque mesh illuminates nothing: every exterior fragment's normal faces away from
+    // it (N·L <= 0). Rescale the centre→pickedPoint offset up to visual size instead.
+    const COLLIDER_SHRINK = 0.9 // keep in sync with the collider scaling in loadModels()
     let faceCenter
     if (picked?.hit && picked.pickedPoint) {
-      faceCenter = picked.pickedPoint.clone()
+      const offset = picked.pickedPoint.subtract(d.mesh.position)
+      offset.scaleInPlace(d.config.scale / COLLIDER_SHRINK)
+      faceCenter = d.mesh.position.add(offset)
     } else {
       const yOff = (d4FaceDown && d.dieType === 'd4') ? -(d.config.scale * 0.6) : (d.config.scale * 0.6)
       faceCenter = d.mesh.position.clone().addInPlaceFromFloats(0, yOff, 0)
     }
 
-    // Nudge slightly outward from the surface so the plane clears z-fighting
-    const nudge = (d4FaceDown && d.dieType === 'd4') ? -0.12 : 0.12
-    faceCenter.y += nudge
+    // Lift the light off the surface proportionally to die size so the winning face is
+    // lit at near-normal incidence (a fixed 0.12 nudge is negligible at scale 6)
+    const lift = d.config.scale * 0.15
+    faceCenter.y += (d4FaceDown && d.dieType === 'd4') ? -lift : lift
 
     // Point light at the face centroid — illuminates the winning face from close up.
     // includedOnlyMeshes is intentionally NOT set: d.mesh is the root/parent node and
@@ -310,7 +320,9 @@ class Dice {
         return
       }
       // quadratic ease-out: fast-bright → soft-dim
-      light.intensity = intensity * 10 * (1 - t * t)
+      // (must use the same 20x boost as the initial assignment — this callback runs on
+      // the very first rendered frame, so a lower multiplier here silently overrides it)
+      light.intensity = intensity * 20 * (1 - t * t)
     }
     scene.registerBeforeRender(fade)
 
