@@ -4,6 +4,7 @@ import { Color3 } from '@babylonjs/core/Maths/math.color'
 import { Ray } from "@babylonjs/core/Culling/ray";
 import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder'
 import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial'
+import { DynamicTexture } from '@babylonjs/core/Materials/Textures/dynamicTexture'
 // import { RayHelper } from '@babylonjs/core/Debug';
 import '../helpers/babylonFileLoader'
 import '@babylonjs/core/Meshes/instancedMesh'
@@ -294,8 +295,25 @@ class Dice {
     glowMesh.billboardMode = 7 // Mesh.BILLBOARDMODE_ALL — always faces the camera
     glowMesh.isPickable  = false
 
+    // Radial-gradient texture: hard white ring was caused by a solid square plane with
+    // additive blending — the plane's corners bled onto the dark background. A circular
+    // gradient fades the glow to fully transparent at the edges, eliminating the ring.
+    const texSize = 128
+    const glowTex = new DynamicTexture(`_glow_tex_${d.id}`, { width: texSize, height: texSize }, scene, false)
+    const ctx2d = glowTex.getContext()
+    const half = texSize / 2
+    const grad = ctx2d.createRadialGradient(half, half, 0, half, half, half)
+    const [r, g, b] = Color3.FromHexString(color).toArray().map(v => Math.round(v * 255))
+    grad.addColorStop(0,   `rgba(${r},${g},${b},1)`)
+    grad.addColorStop(0.55, `rgba(${r},${g},${b},0.6)`)
+    grad.addColorStop(1,   `rgba(${r},${g},${b},0)`)
+    ctx2d.fillStyle = grad
+    ctx2d.fillRect(0, 0, texSize, texSize)
+    glowTex.update()
+
     const glowMat = new StandardMaterial(`_glow_mat_${d.id}`, scene)
-    glowMat.emissiveColor    = Color3.FromHexString(color)
+    glowMat.emissiveTexture  = glowTex
+    glowMat.opacityTexture   = glowTex
     glowMat.disableLighting  = true
     glowMat.backFaceCulling  = false
     glowMat.alpha            = intensity
@@ -312,6 +330,7 @@ class Dice {
         scene.unregisterBeforeRender(fade)
         glowMesh.dispose()
         glowMat.dispose()
+        glowTex.dispose()
         disposed = true
         return
       }

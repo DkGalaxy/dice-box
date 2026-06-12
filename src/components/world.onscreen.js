@@ -150,6 +150,17 @@ class WorldOnscreen {
 
 			// trigger callback that roll is complete
 			this.onRollComplete()
+
+			// If highlightResult is configured, keep rendering so glow animations play.
+			// A single die would otherwise stop the engine before the glow rendered even once.
+			if (this.config.highlightResult) {
+				const hlDuration = (typeof this.config.highlightResult === 'object' && this.config.highlightResult !== null)
+					? (this.config.highlightResult.durationMs ?? 3500)
+					: 3500
+				const glowLoop = () => this.#scene.render()
+				this.#engine.runRenderLoop(glowLoop)
+				setTimeout(() => this.#engine.stopRenderLoop(), hlDuration + 200)
+			}
 		}
 		// otherwise keep on rendering
 		else {

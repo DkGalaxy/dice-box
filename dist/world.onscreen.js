@@ -1,23 +1,23 @@
 var wt = Object.defineProperty;
 var Dt = (c, e, t) => e in c ? wt(c, e, { enumerable: !0, configurable: !0, writable: !0, value: t }) : c[e] = t;
-var he = (c, e, t) => (Dt(c, typeof e != "symbol" ? e + "" : e, t), t), Ke = (c, e, t) => {
+var he = (c, e, t) => (Dt(c, typeof e != "symbol" ? e + "" : e, t), t), je = (c, e, t) => {
   if (!e.has(c))
     throw TypeError("Cannot " + t);
 };
-var T = (c, e, t) => (Ke(c, e, "read from private field"), t ? t.call(c) : e.get(c)), $ = (c, e, t) => {
+var T = (c, e, t) => (je(c, e, "read from private field"), t ? t.call(c) : e.get(c)), $ = (c, e, t) => {
   if (e.has(c))
     throw TypeError("Cannot add the same private member more than once");
   e instanceof WeakSet ? e.add(c) : e.set(c, t);
-}, Y = (c, e, t, i) => (Ke(c, e, "write to private field"), i ? i.call(c, t) : e.set(c, t), t);
-var me = (c, e, t, i) => ({
+}, Y = (c, e, t, i) => (je(c, e, "write to private field"), i ? i.call(c, t) : e.set(c, t), t);
+var ge = (c, e, t, i) => ({
   set _(s) {
     Y(c, e, s, t);
   },
   get _() {
     return T(c, e, i);
   }
-}), ut = (c, e, t) => (Ke(c, e, "access private method"), t);
-import { E as ve, O as V, a as Mt, M as ct, S as Tt, C as Pe, b as C, V as S, _ as E, c as j, d as Ae, Q as fe, e as ge, T as Ne, A as it, s as Ze, f as R, g as It, N as Re, h as we, U as Ot, i as Ue, j as se, L as G, k as rt, l as Ft, G as xt, I as De, m as pe, n as Et, o as Ve, p as w, q as yt, r as D, t as nt, u as ae, v as Ce, w as I, x as Lt, R as st, P as bt, y as Bt, z as ft, B as Nt, F as Xe, H as Ut, J as Z, K as at, W as Rt, X as ot, Y as ht, Z as Ct, $ as zt, a0 as Vt, a1 as ke, a2 as kt, a3 as Wt, a4 as Ht, a5 as lt, a6 as be, D as Se } from "./Dice.js";
+}), ut = (c, e, t) => (je(c, e, "access private method"), t);
+import { E as ve, O as V, a as Mt, M as ct, S as Tt, C as Pe, b as C, V as S, _ as E, c as Q, d as Ae, Q as fe, e as me, T as Ne, A as it, s as Ze, f as R, g as It, N as Re, h as we, U as Ot, i as Ue, j as se, L as G, k as rt, l as Ft, G as xt, I as De, m as pe, n as Et, o as Ve, p as w, q as yt, r as D, t as nt, u as ae, v as Ce, w as I, x as Lt, R as st, P as bt, y as Bt, z as ft, B as Nt, F as Xe, H as Ut, J as Z, K as at, W as Rt, X as ot, Y as ht, Z as Ct, $ as zt, a0 as Vt, a1 as ke, a2 as kt, a3 as Wt, a4 as Ht, a5 as lt, a6 as be, D as Se } from "./Dice.js";
 import { d as Zt } from "./dice-box.es.js";
 function Xt(c) {
   return new ve(c, !0, {
@@ -50,7 +50,7 @@ class oe {
     this.priority = e;
   }
 }
-class je extends oe {
+class Ke extends oe {
   /**
    * Gets a string describing the action executed by the current optimization
    * @returns description string
@@ -310,7 +310,7 @@ class _e {
   static LowDegradationAllowed(e) {
     const t = new _e(e);
     let i = 0;
-    return t.addOptimization(new le(i)), t.addOptimization(new Qe(i)), t.addOptimization(new Je(i)), i++, t.addOptimization(new qe(i)), t.addOptimization(new et(i)), i++, t.addOptimization(new je(i, 1024)), t;
+    return t.addOptimization(new le(i)), t.addOptimization(new Qe(i)), t.addOptimization(new Je(i)), i++, t.addOptimization(new qe(i)), t.addOptimization(new et(i)), i++, t.addOptimization(new Ke(i, 1024)), t;
   }
   /**
    * Creates a list of pre-defined optimizations aimed to have a moderate impact on the scene visual
@@ -320,7 +320,7 @@ class _e {
   static ModerateDegradationAllowed(e) {
     const t = new _e(e);
     let i = 0;
-    return t.addOptimization(new le(i)), t.addOptimization(new Qe(i)), t.addOptimization(new Je(i)), i++, t.addOptimization(new qe(i)), t.addOptimization(new et(i)), i++, t.addOptimization(new je(i, 512)), i++, t.addOptimization(new pt(i)), i++, t.addOptimization(new _t(i, 2)), t;
+    return t.addOptimization(new le(i)), t.addOptimization(new Qe(i)), t.addOptimization(new Je(i)), i++, t.addOptimization(new qe(i)), t.addOptimization(new et(i)), i++, t.addOptimization(new Ke(i, 512)), i++, t.addOptimization(new pt(i)), i++, t.addOptimization(new _t(i, 2)), t;
   }
   /**
    * Creates a list of pre-defined optimizations aimed to have a big impact on the scene visual
@@ -330,7 +330,7 @@ class _e {
   static HighDegradationAllowed(e) {
     const t = new _e(e);
     let i = 0;
-    return t.addOptimization(new le(i)), t.addOptimization(new Qe(i)), t.addOptimization(new Je(i)), i++, t.addOptimization(new qe(i)), t.addOptimization(new et(i)), i++, t.addOptimization(new je(i, 256)), i++, t.addOptimization(new pt(i)), i++, t.addOptimization(new _t(i, 4)), t;
+    return t.addOptimization(new le(i)), t.addOptimization(new Qe(i)), t.addOptimization(new Je(i)), i++, t.addOptimization(new qe(i)), t.addOptimization(new et(i)), i++, t.addOptimization(new Ke(i, 256)), i++, t.addOptimization(new pt(i)), i++, t.addOptimization(new _t(i, 4)), t;
   }
 }
 class dt {
@@ -477,7 +477,7 @@ function $t(c) {
   const i = _e.LowDegradationAllowed();
   return i.optimizations = i.optimizations.splice(1), i.targetFrameRate = 60, dt.OptimizeAsync(t, i), t;
 }
-class z extends j {
+class z extends Q {
   /**
    * Instantiates a target camera that takes a mesh or position as a target and continues to look at it while it moves.
    * This is the base of the follow, arc rotate cameras and Free camera
@@ -557,7 +557,7 @@ class z extends j {
    * @param target Defines the new target as a Vector
    */
   setTarget(e) {
-    this.upVector.normalize(), this._initialFocalDistance = e.subtract(this.position).length(), this.position.z === e.z && (this.position.z += ge), this._referencePoint.normalize().scaleInPlace(this._initialFocalDistance), C.LookAtLHToRef(this.position, e, this._defaultUp, this._camMatrix), this._camMatrix.invert(), this.rotation.x = Math.atan(this._camMatrix.m[6] / this._camMatrix.m[10]);
+    this.upVector.normalize(), this._initialFocalDistance = e.subtract(this.position).length(), this.position.z === e.z && (this.position.z += me), this._referencePoint.normalize().scaleInPlace(this._initialFocalDistance), C.LookAtLHToRef(this.position, e, this._defaultUp, this._camMatrix), this._camMatrix.invert(), this.rotation.x = Math.atan(this._camMatrix.m[6] / this._camMatrix.m[10]);
     const t = e.subtract(this.position);
     t.x >= 0 ? this.rotation.y = -Math.atan(t.z / t.x) + Math.PI / 2 : this.rotation.y = -Math.atan(t.z / t.x) - Math.PI / 2, this.rotation.z = 0, isNaN(this.rotation.x) && (this.rotation.x = 0), isNaN(this.rotation.y) && (this.rotation.y = 0), isNaN(this.rotation.z) && (this.rotation.z = 0), this.rotationQuaternion && fe.RotationYawPitchRollToRef(this.rotation.y, this.rotation.x, this.rotation.z, this.rotationQuaternion);
   }
@@ -593,7 +593,7 @@ class z extends j {
   /** @internal */
   _checkInputs() {
     const e = this.invertRotation ? -this.inverseRotationSpeed : 1, t = this._decideIfNeedsToMove(), i = Math.abs(this.cameraRotation.x) > 0 || Math.abs(this.cameraRotation.y) > 0;
-    t && this._updatePosition(), i && (this.rotationQuaternion && this.rotationQuaternion.toEulerAnglesToRef(this.rotation), this.rotation.x += this.cameraRotation.x * e, this.rotation.y += this.cameraRotation.y * e, this.noRotationConstraint || (this.rotation.x > 1.570796 && (this.rotation.x = 1.570796), this.rotation.x < -1.570796 && (this.rotation.x = -1.570796)), this.rotationQuaternion && this.rotation.lengthSquared() && fe.RotationYawPitchRollToRef(this.rotation.y, this.rotation.x, this.rotation.z, this.rotationQuaternion)), t && (Math.abs(this.cameraDirection.x) < this.speed * ge && (this.cameraDirection.x = 0), Math.abs(this.cameraDirection.y) < this.speed * ge && (this.cameraDirection.y = 0), Math.abs(this.cameraDirection.z) < this.speed * ge && (this.cameraDirection.z = 0), this.cameraDirection.scaleInPlace(this.inertia)), i && (Math.abs(this.cameraRotation.x) < this.speed * ge && (this.cameraRotation.x = 0), Math.abs(this.cameraRotation.y) < this.speed * ge && (this.cameraRotation.y = 0), this.cameraRotation.scaleInPlace(this.inertia)), super._checkInputs();
+    t && this._updatePosition(), i && (this.rotationQuaternion && this.rotationQuaternion.toEulerAnglesToRef(this.rotation), this.rotation.x += this.cameraRotation.x * e, this.rotation.y += this.cameraRotation.y * e, this.noRotationConstraint || (this.rotation.x > 1.570796 && (this.rotation.x = 1.570796), this.rotation.x < -1.570796 && (this.rotation.x = -1.570796)), this.rotationQuaternion && this.rotation.lengthSquared() && fe.RotationYawPitchRollToRef(this.rotation.y, this.rotation.x, this.rotation.z, this.rotationQuaternion)), t && (Math.abs(this.cameraDirection.x) < this.speed * me && (this.cameraDirection.x = 0), Math.abs(this.cameraDirection.y) < this.speed * me && (this.cameraDirection.y = 0), Math.abs(this.cameraDirection.z) < this.speed * me && (this.cameraDirection.z = 0), this.cameraDirection.scaleInPlace(this.inertia)), i && (Math.abs(this.cameraRotation.x) < this.speed * me && (this.cameraRotation.x = 0), Math.abs(this.cameraRotation.y) < this.speed * me && (this.cameraRotation.y = 0), this.cameraRotation.scaleInPlace(this.inertia)), super._checkInputs();
   }
   _updateCameraRotationMatrix() {
     this.rotationQuaternion ? this.rotationQuaternion.toRotationMatrix(this._cameraRotationMatrix) : C.RotationYawPitchRollToRef(this.rotation.y, this.rotation.x, this.rotation.z, this._cameraRotationMatrix);
@@ -630,9 +630,9 @@ class z extends j {
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   createRigCamera(e, t) {
-    if (this.cameraRigMode !== j.RIG_MODE_NONE) {
+    if (this.cameraRigMode !== Q.RIG_MODE_NONE) {
       const i = new z(e, this.position.clone(), this.getScene());
-      return i.isRigCamera = !0, i.rigParent = this, (this.cameraRigMode === j.RIG_MODE_VR || this.cameraRigMode === j.RIG_MODE_WEBVR) && (this.rotationQuaternion || (this.rotationQuaternion = new fe()), i._cameraRigParams = {}, i.rotationQuaternion = new fe()), i.mode = this.mode, i.orthoLeft = this.orthoLeft, i.orthoRight = this.orthoRight, i.orthoTop = this.orthoTop, i.orthoBottom = this.orthoBottom, i;
+      return i.isRigCamera = !0, i.rigParent = this, (this.cameraRigMode === Q.RIG_MODE_VR || this.cameraRigMode === Q.RIG_MODE_WEBVR) && (this.rotationQuaternion || (this.rotationQuaternion = new fe()), i._cameraRigParams = {}, i.rotationQuaternion = new fe()), i.mode = this.mode, i.orthoLeft = this.orthoLeft, i.orthoRight = this.orthoRight, i.orthoTop = this.orthoTop, i.orthoBottom = this.orthoBottom, i;
     }
     return null;
   }
@@ -642,16 +642,16 @@ class z extends j {
   _updateRigCameras() {
     const e = this._rigCameras[0], t = this._rigCameras[1];
     switch (this.computeWorldMatrix(), this.cameraRigMode) {
-      case j.RIG_MODE_STEREOSCOPIC_ANAGLYPH:
-      case j.RIG_MODE_STEREOSCOPIC_SIDEBYSIDE_PARALLEL:
-      case j.RIG_MODE_STEREOSCOPIC_SIDEBYSIDE_CROSSEYED:
-      case j.RIG_MODE_STEREOSCOPIC_OVERUNDER:
-      case j.RIG_MODE_STEREOSCOPIC_INTERLACED: {
-        const i = this.cameraRigMode === j.RIG_MODE_STEREOSCOPIC_SIDEBYSIDE_CROSSEYED ? 1 : -1, s = this.cameraRigMode === j.RIG_MODE_STEREOSCOPIC_SIDEBYSIDE_CROSSEYED ? -1 : 1;
+      case Q.RIG_MODE_STEREOSCOPIC_ANAGLYPH:
+      case Q.RIG_MODE_STEREOSCOPIC_SIDEBYSIDE_PARALLEL:
+      case Q.RIG_MODE_STEREOSCOPIC_SIDEBYSIDE_CROSSEYED:
+      case Q.RIG_MODE_STEREOSCOPIC_OVERUNDER:
+      case Q.RIG_MODE_STEREOSCOPIC_INTERLACED: {
+        const i = this.cameraRigMode === Q.RIG_MODE_STEREOSCOPIC_SIDEBYSIDE_CROSSEYED ? 1 : -1, s = this.cameraRigMode === Q.RIG_MODE_STEREOSCOPIC_SIDEBYSIDE_CROSSEYED ? -1 : 1;
         this._getRigCamPositionAndTarget(this._cameraRigParams.stereoHalfAngle * i, e), this._getRigCamPositionAndTarget(this._cameraRigParams.stereoHalfAngle * s, t);
         break;
       }
-      case j.RIG_MODE_VR:
+      case Q.RIG_MODE_VR:
         e.rotationQuaternion ? (e.rotationQuaternion.copyFrom(this.rotationQuaternion), t.rotationQuaternion.copyFrom(this.rotationQuaternion)) : (e.rotation.copyFrom(this.rotation), t.rotation.copyFrom(this.rotation)), e.position.copyFrom(this.position), t.position.copyFrom(this.position);
         break;
     }
@@ -1468,12 +1468,12 @@ class re extends Le {
       this._orthoLeft = Number.MAX_VALUE, this._orthoRight = Number.MIN_VALUE, this._orthoTop = Number.MIN_VALUE, this._orthoBottom = Number.MAX_VALUE;
       let h = Number.MAX_VALUE, u = Number.MIN_VALUE;
       for (let f = 0; f < i.length; f++) {
-        const m = i[f];
-        if (!m)
+        const g = i[f];
+        if (!g)
           continue;
-        const _ = m.getBoundingInfo().boundingBox;
-        for (let g = 0; g < _.vectorsWorld.length; g++)
-          S.TransformCoordinatesToRef(_.vectorsWorld[g], t, d), d.x < this._orthoLeft && (this._orthoLeft = d.x), d.y < this._orthoBottom && (this._orthoBottom = d.y), d.x > this._orthoRight && (this._orthoRight = d.x), d.y > this._orthoTop && (this._orthoTop = d.y), this.autoCalcShadowZBounds && (d.z < h && (h = d.z), d.z > u && (u = d.z));
+        const _ = g.getBoundingInfo().boundingBox;
+        for (let m = 0; m < _.vectorsWorld.length; m++)
+          S.TransformCoordinatesToRef(_.vectorsWorld[m], t, d), d.x < this._orthoLeft && (this._orthoLeft = d.x), d.y < this._orthoBottom && (this._orthoBottom = d.y), d.x > this._orthoRight && (this._orthoRight = d.x), d.y > this._orthoTop && (this._orthoTop = d.y), this.autoCalcShadowZBounds && (d.z < h && (h = d.z), d.z > u && (u = d.z));
       }
       this.autoCalcShadowZBounds && (this._shadowMinZ = h, this._shadowMaxZ = u);
     }
@@ -1639,7 +1639,7 @@ E([
 E([
   Ze()
 ], Ge.prototype, "direction", void 0);
-class Kt {
+class jt {
   /**
    * Gets the depth/stencil texture (if created by a createDepthStencilTexture() call)
    */
@@ -1826,13 +1826,13 @@ class Kt {
         let h = !1, u = d.length;
         const f = d[d.length - 1]._source;
         (f === De.Depth || f === De.DepthStencil) && (h = !0, u--);
-        const m = [], p = [], _ = [], g = [], b = [], A = [], v = [], y = {};
+        const g = [], p = [], _ = [], m = [], b = [], A = [], v = [], y = {};
         for (let L = 0; L < u; ++L) {
           const N = d[L];
-          m.push(N.samplingMode), p.push(N.type), _.push(N.format), y[N.uniqueId] !== void 0 ? (g.push(-1), v.push(0)) : (y[N.uniqueId] = L, N.is2DArray ? (g.push(35866), v.push(N.depth)) : N.isCube ? (g.push(34067), v.push(0)) : N.is3D ? (g.push(32879), v.push(N.depth)) : (g.push(3553), v.push(0))), this._faceIndices && b.push((e = this._faceIndices[L]) !== null && e !== void 0 ? e : 0), this._layerIndices && A.push((t = this._layerIndices[L]) !== null && t !== void 0 ? t : 0);
+          g.push(N.samplingMode), p.push(N.type), _.push(N.format), y[N.uniqueId] !== void 0 ? (m.push(-1), v.push(0)) : (y[N.uniqueId] = L, N.is2DArray ? (m.push(35866), v.push(N.depth)) : N.isCube ? (m.push(34067), v.push(0)) : N.is3D ? (m.push(32879), v.push(N.depth)) : (m.push(3553), v.push(0))), this._faceIndices && b.push((e = this._faceIndices[L]) !== null && e !== void 0 ? e : 0), this._layerIndices && A.push((t = this._layerIndices[L]) !== null && t !== void 0 ? t : 0);
         }
         const K = {
-          samplingModes: m,
+          samplingModes: g,
           generateMipMaps: d[0].generateMipMaps,
           generateDepthBuffer: this._generateDepthBuffer,
           generateStencilBuffer: this._generateStencilBuffer,
@@ -1840,17 +1840,17 @@ class Kt {
           types: p,
           formats: _,
           textureCount: u,
-          targetTypes: g,
+          targetTypes: m,
           faceIndex: b,
           layerIndex: A,
           layerCounts: v
-        }, W = {
+        }, H = {
           width: this.width,
           height: this.height
         };
-        l = this._engine.createMultipleRenderTarget(W, K);
+        l = this._engine.createMultipleRenderTarget(H, K);
         for (let L = 0; L < u; ++L) {
-          if (g[L] !== -1)
+          if (m[L] !== -1)
             continue;
           const N = y[d[L].uniqueId];
           l.setTexture(l.textures[N], L);
@@ -1908,7 +1908,7 @@ class Kt {
     e || ((t = this._depthStencilTexture) === null || t === void 0 || t.dispose(), this._depthStencilTexture = null, this.releaseTextures()), this._engine._releaseRenderTargetWrapper(this);
   }
 }
-class jt extends Kt {
+class Kt extends jt {
   constructor(e, t, i, s, r) {
     super(e, t, i, s), this._framebuffer = null, this._depthStencilBuffer = null, this._MSAAFramebuffer = null, this._colorTextureArray = null, this._depthStencilTextureArray = null, this._context = r;
   }
@@ -1992,7 +1992,7 @@ class jt extends Kt {
   }
 }
 pe.prototype._createHardwareRenderTargetWrapper = function(c, e, t) {
-  const i = new jt(c, e, t, this, this._gl);
+  const i = new Kt(c, e, t, this, this._gl);
   return this._renderTargetWrapperCache.push(i), i;
 };
 pe.prototype.createRenderTargetTexture = function(c, e) {
@@ -2000,8 +2000,8 @@ pe.prototype.createRenderTargetTexture = function(c, e) {
   const s = this._createHardwareRenderTargetWrapper(!1, !1, c);
   let r = !0, n = !1, a = !1, o, l = 1;
   e !== void 0 && typeof e == "object" && (r = (t = e.generateDepthBuffer) !== null && t !== void 0 ? t : !0, n = !!e.generateStencilBuffer, a = !!e.noColorAttachment, o = e.colorAttachment, l = (i = e.samples) !== null && i !== void 0 ? i : 1);
-  const d = o || (a ? null : this._createInternalTexture(c, e, !0, De.RenderTarget)), h = c.width || c, u = c.height || c, f = this._currentFramebuffer, m = this._gl, p = m.createFramebuffer();
-  return this._bindUnboundFramebuffer(p), s._depthStencilBuffer = this._setupFramebufferDepthAttachments(n, r, h, u), d && !d.is2DArray && m.framebufferTexture2D(m.FRAMEBUFFER, m.COLOR_ATTACHMENT0, m.TEXTURE_2D, d._hardwareTexture.underlyingResource, 0), this._bindUnboundFramebuffer(f), s._framebuffer = p, s._generateDepthBuffer = r, s._generateStencilBuffer = n, s.setTextures(d), this.updateRenderTargetTextureSampleCount(s, l), s;
+  const d = o || (a ? null : this._createInternalTexture(c, e, !0, De.RenderTarget)), h = c.width || c, u = c.height || c, f = this._currentFramebuffer, g = this._gl, p = g.createFramebuffer();
+  return this._bindUnboundFramebuffer(p), s._depthStencilBuffer = this._setupFramebufferDepthAttachments(n, r, h, u), d && !d.is2DArray && g.framebufferTexture2D(g.FRAMEBUFFER, g.COLOR_ATTACHMENT0, g.TEXTURE_2D, d._hardwareTexture.underlyingResource, 0), this._bindUnboundFramebuffer(f), s._framebuffer = p, s._generateDepthBuffer = r, s._generateStencilBuffer = n, s.setTextures(d), this.updateRenderTargetTextureSampleCount(s, l), s;
 };
 pe.prototype.createDepthStencilTexture = function(c, e, t) {
   if (e.isCube) {
@@ -2223,7 +2223,7 @@ void main(void)
 gl_FragColor=texture2D(textureSampler,vUV);
 }`;
 w.ShadersStore[vt] = Pt;
-const mt = { name: vt, shader: Pt };
+const gt = { name: vt, shader: Pt };
 class X {
   static _CreateDumpRenderer() {
     if (!X._DumpToolsEngine) {
@@ -2239,8 +2239,8 @@ class X {
       t.getCaps().parallelShaderCompile = void 0;
       const i = new Jt(t), s = new ei({
         engine: t,
-        name: mt.name,
-        fragmentShader: mt.shader,
+        name: gt.name,
+        fragmentShader: gt.shader,
         samplerNames: ["textureSampler"]
       });
       X._DumpToolsEngine = {
@@ -2301,16 +2301,16 @@ class X {
       const u = new Uint8Array(i.length);
       let f = i.length;
       for (; f--; ) {
-        const m = i[f];
-        u[f] = m < 0 ? 0 : m > 1 ? 1 : Math.round(m * 255);
+        const g = i[f];
+        u[f] = g < 0 ? 0 : g > 1 ? 1 : Math.round(g * 255);
       }
       i = u;
     }
     const h = d.engine.createRawTexture(i, e, t, 5, !1, !a, 1);
     d.renderer.setViewport(), d.renderer.applyEffectWrapper(d.wrapper), d.wrapper.effect._bindTexture("textureSampler", h), d.renderer.draw(), o ? Ce.ToBlob(d.canvas, (u) => {
       const f = new FileReader();
-      f.onload = (m) => {
-        const p = m.target.result;
+      f.onload = (g) => {
+        const p = g.target.result;
         s && s(p);
       }, f.readAsArrayBuffer(u);
     }, r, l) : Ce.EncodeScreenshotCanvasData(d.canvas, s, r, n, l), h.dispose();
@@ -2326,7 +2326,7 @@ const ti = () => {
   Ce.DumpData = X.DumpData, Ce.DumpDataAsync = X.DumpDataAsync, Ce.DumpFramebuffer = X.DumpFramebuffer;
 };
 ti();
-class q extends I {
+class J extends I {
   /**
    * Use this list to define the list of mesh you want to render.
    */
@@ -2446,12 +2446,12 @@ class q extends I {
     return (t = (e = this._renderTarget) === null || e === void 0 ? void 0 : e._depthStencilTexture) !== null && t !== void 0 ? t : null;
   }
   /** @internal */
-  constructor(e, t, i, s = !1, r = !0, n = 0, a = !1, o = I.TRILINEAR_SAMPLINGMODE, l = !0, d = !1, h = !1, u = 5, f = !1, m, p, _ = !1, g = !1) {
-    var b, A, v, y, K, W;
+  constructor(e, t, i, s = !1, r = !0, n = 0, a = !1, o = I.TRILINEAR_SAMPLINGMODE, l = !0, d = !1, h = !1, u = 5, f = !1, g, p, _ = !1, m = !1) {
+    var b, A, v, y, K, H;
     let L;
     if (typeof s == "object") {
       const O = s;
-      s = !!O.generateMipMaps, r = (b = O.doNotChangeAspectRatio) !== null && b !== void 0 ? b : !0, n = (A = O.type) !== null && A !== void 0 ? A : 0, a = !!O.isCube, o = (v = O.samplingMode) !== null && v !== void 0 ? v : I.TRILINEAR_SAMPLINGMODE, l = (y = O.generateDepthBuffer) !== null && y !== void 0 ? y : !0, d = !!O.generateStencilBuffer, h = !!O.isMulti, u = (K = O.format) !== null && K !== void 0 ? K : 5, f = !!O.delayAllocation, m = O.samples, p = O.creationFlags, _ = !!O.noColorAttachment, g = !!O.useSRGBBuffer, L = O.colorAttachment;
+      s = !!O.generateMipMaps, r = (b = O.doNotChangeAspectRatio) !== null && b !== void 0 ? b : !0, n = (A = O.type) !== null && A !== void 0 ? A : 0, a = !!O.isCube, o = (v = O.samplingMode) !== null && v !== void 0 ? v : I.TRILINEAR_SAMPLINGMODE, l = (y = O.generateDepthBuffer) !== null && y !== void 0 ? y : !0, d = !!O.generateStencilBuffer, h = !!O.isMulti, u = (K = O.format) !== null && K !== void 0 ? K : 5, f = !!O.delayAllocation, g = O.samples, p = O.creationFlags, _ = !!O.noColorAttachment, m = !!O.useSRGBBuffer, L = O.colorAttachment;
     }
     if (super(null, i, !s, void 0, o, void 0, void 0, void 0, void 0, u), this._unObserveRenderList = null, this._renderListHasChanged = (O, Ye) => {
       var k;
@@ -2466,17 +2466,17 @@ class q extends I {
     }), this._generateMipMaps = !!s, this._doNotChangeAspectRatio = r, this._renderingManager = new st(i), this._renderingManager._useSceneAutoClearSetup = !0, !h && (this._renderTargetOptions = {
       generateMipMaps: s,
       type: n,
-      format: (W = this._format) !== null && W !== void 0 ? W : void 0,
+      format: (H = this._format) !== null && H !== void 0 ? H : void 0,
       samplingMode: this.samplingMode,
       generateDepthBuffer: l,
       generateStencilBuffer: d,
-      samples: m,
+      samples: g,
       creationFlags: p,
       noColorAttachment: _,
-      useSRGBBuffer: g,
+      useSRGBBuffer: m,
       colorAttachment: L,
       label: this.name
-    }, this.samplingMode === I.NEAREST_SAMPLINGMODE && (this.wrapU = I.CLAMP_ADDRESSMODE, this.wrapV = I.CLAMP_ADDRESSMODE), f || (a ? (this._renderTarget = i.getEngine().createRenderTargetCubeTexture(this.getRenderSize(), this._renderTargetOptions), this.coordinatesMode = I.INVCUBIC_MODE, this._textureMatrix = C.Identity()) : this._renderTarget = i.getEngine().createRenderTargetTexture(this._size, this._renderTargetOptions), this._texture = this._renderTarget.texture, m !== void 0 && (this.samples = m)));
+    }, this.samplingMode === I.NEAREST_SAMPLINGMODE && (this.wrapU = I.CLAMP_ADDRESSMODE, this.wrapV = I.CLAMP_ADDRESSMODE), f || (a ? (this._renderTarget = i.getEngine().createRenderTargetCubeTexture(this.getRenderSize(), this._renderTargetOptions), this.coordinatesMode = I.INVCUBIC_MODE, this._textureMatrix = C.Identity()) : this._renderTarget = i.getEngine().createRenderTargetTexture(this._size, this._renderTargetOptions), this._texture = this._renderTarget.texture, g !== void 0 && (this.samples = g)));
   }
   /**
    * Creates a depth stencil texture.
@@ -2691,8 +2691,8 @@ class q extends I {
         return i;
       const u = h.meshes;
       for (let f = 0; f < u.length; f++) {
-        const m = u[f];
-        this.renderListPredicate(m) && this.renderList.push(m);
+        const g = u[f];
+        this.renderListPredicate(g) && this.renderList.push(g);
       }
     }
     const a = n.currentRenderPassId;
@@ -2705,17 +2705,17 @@ class q extends I {
       const h = this.is2DArray ? this.getRenderLayers() : this.isCube ? 6 : 1;
       for (let u = 0; u < h && d; u++) {
         let f = null;
-        const m = this.renderList ? this.renderList : r.getActiveMeshes().data, p = this.renderList ? this.renderList.length : r.getActiveMeshes().length;
-        n.currentRenderPassId = this._renderPassIds[u], this.onBeforeRenderObservable.notifyObservers(u), this.getCustomRenderList && (f = this.getCustomRenderList(u, m, p)), f || (f = m), this._doNotChangeAspectRatio || r.updateTransformMatrix(!0);
+        const g = this.renderList ? this.renderList : r.getActiveMeshes().data, p = this.renderList ? this.renderList.length : r.getActiveMeshes().length;
+        n.currentRenderPassId = this._renderPassIds[u], this.onBeforeRenderObservable.notifyObservers(u), this.getCustomRenderList && (f = this.getCustomRenderList(u, g, p)), f || (f = g), this._doNotChangeAspectRatio || r.updateTransformMatrix(!0);
         for (let _ = 0; _ < f.length && d; ++_) {
-          const g = f[_];
-          if (!(!g.isEnabled() || g.isBlocked || !g.isVisible || !g.subMeshes)) {
+          const m = f[_];
+          if (!(!m.isEnabled() || m.isBlocked || !m.isVisible || !m.subMeshes)) {
             if (this.customIsReadyFunction) {
-              if (!this.customIsReadyFunction(g, this.refreshRate, i)) {
+              if (!this.customIsReadyFunction(m, this.refreshRate, i)) {
                 d = !1;
                 continue;
               }
-            } else if (!g.isReady(!0)) {
+            } else if (!m.isReady(!0)) {
               d = !1;
               continue;
             }
@@ -2807,8 +2807,8 @@ class q extends I {
       this.onClearObservable.hasObservers() ? this.onClearObservable.notifyObservers(f) : this.skipInitialClear || f.clear(this.clearColor || u.clearColor, !0, !0, !0);
     else {
       let p = null;
-      const _ = this.renderList ? this.renderList : u.getActiveMeshes().data, g = this.renderList ? this.renderList.length : u.getActiveMeshes().length;
-      this.getCustomRenderList && (p = this.getCustomRenderList(this.is2DArray ? s : e, _, g)), p ? this._prepareRenderingManager(p, p.length, r, this.forceLayerMaskCheck) : (this._defaultRenderListPrepared || (this._prepareRenderingManager(_, g, r, !this.renderList || this.forceLayerMaskCheck), this._defaultRenderListPrepared = !0), p = _);
+      const _ = this.renderList ? this.renderList : u.getActiveMeshes().data, m = this.renderList ? this.renderList.length : u.getActiveMeshes().length;
+      this.getCustomRenderList && (p = this.getCustomRenderList(this.is2DArray ? s : e, _, m)), p ? this._prepareRenderingManager(p, p.length, r, this.forceLayerMaskCheck) : (this._defaultRenderListPrepared || (this._prepareRenderingManager(_, m, r, !this.renderList || this.forceLayerMaskCheck), this._defaultRenderListPrepared = !0), p = _);
       for (const A of u._beforeRenderTargetClearStage)
         A.action(this, e, s);
       this.onClearObservable.hasObservers() ? this.onClearObservable.notifyObservers(f) : this.skipInitialClear || f.clear(this.clearColor || u.clearColor, !0, !0, !0), this._doNotChangeAspectRatio || u.updateTransformMatrix(!0);
@@ -2851,7 +2851,7 @@ class q extends I {
    * @returns the cloned texture
    */
   clone() {
-    const e = this.getSize(), t = new q(this.name, e, this.getScene(), this._renderTargetOptions.generateMipMaps, this._doNotChangeAspectRatio, this._renderTargetOptions.type, this.isCube, this._renderTargetOptions.samplingMode, this._renderTargetOptions.generateDepthBuffer, this._renderTargetOptions.generateStencilBuffer, void 0, this._renderTargetOptions.format, void 0, this._renderTargetOptions.samples);
+    const e = this.getSize(), t = new J(this.name, e, this.getScene(), this._renderTargetOptions.generateMipMaps, this._doNotChangeAspectRatio, this._renderTargetOptions.type, this.isCube, this._renderTargetOptions.samplingMode, this._renderTargetOptions.generateDepthBuffer, this._renderTargetOptions.generateStencilBuffer, void 0, this._renderTargetOptions.format, void 0, this._renderTargetOptions.samples);
     return t.hasAlpha = this.hasAlpha, t.level = this.level, t.coordinatesMode = this.coordinatesMode, this.renderList && (t.renderList = this.renderList.slice(0)), t;
   }
   /**
@@ -2898,7 +2898,7 @@ class q extends I {
   }
   /** @internal */
   _rebuild() {
-    this.refreshRate === q.REFRESHRATE_RENDER_ONCE && (this.refreshRate = q.REFRESHRATE_RENDER_ONCE), this._postProcessManager && this._postProcessManager._rebuild();
+    this.refreshRate === J.REFRESHRATE_RENDER_ONCE && (this.refreshRate = J.REFRESHRATE_RENDER_ONCE), this._postProcessManager && this._postProcessManager._rebuild();
   }
   /**
    * Clear the info related to rendering groups preventing retention point in material dispose.
@@ -2914,10 +2914,10 @@ class q extends I {
     return 1;
   }
 }
-q.REFRESHRATE_RENDER_ONCE = 0;
-q.REFRESHRATE_RENDER_ONEVERYFRAME = 1;
-q.REFRESHRATE_RENDER_ONEVERYTWOFRAMES = 2;
-I._CreateRenderTargetTexture = (c, e, t, i, s) => new q(c, e, t, i);
+J.REFRESHRATE_RENDER_ONCE = 0;
+J.REFRESHRATE_RENDER_ONEVERYFRAME = 1;
+J.REFRESHRATE_RENDER_ONEVERYTWOFRAMES = 2;
+I._CreateRenderTargetTexture = (c, e, t, i, s) => new J(c, e, t, i);
 class P {
   /**
    * Registers a shader code processing with a post process name.
@@ -3033,8 +3033,8 @@ class P {
    * @param blockCompilation If the shader should not be compiled immediatly. (default: false)
    * @param textureFormat Format of textures used when performing the post process. (default: TEXTUREFORMAT_RGBA)
    */
-  constructor(e, t, i, s, r, n, a = 1, o, l, d = null, h = 0, u = "postprocess", f, m = !1, p = 5, _ = Nt.GLSL) {
-    this._parentContainer = null, this.width = -1, this.height = -1, this.nodeMaterialSource = null, this._outputTexture = null, this.autoClear = !0, this.forceAutoClearInAlphaMode = !1, this.alphaMode = 0, this.animations = new Array(), this.enablePixelPerfectMode = !1, this.forceFullscreenViewport = !0, this.scaleMode = 1, this.alwaysForcePOT = !1, this._samples = 1, this.adaptScaleToCurrentViewport = !1, this._reusable = !1, this._renderId = 0, this.externalTextureSamplerBinding = !1, this._textures = new ft(2), this._textureCache = [], this._currentRenderTextureInd = 0, this._scaleRatio = new Ae(1, 1), this._texelSize = Ae.Zero(), this.onActivateObservable = new V(), this.onSizeChangedObservable = new V(), this.onApplyObservable = new V(), this.onBeforeRenderObservable = new V(), this.onAfterRenderObservable = new V(), this.name = e, n != null ? (this._camera = n, this._scene = n.getScene(), n.attachPostProcess(this), this._engine = this._scene.getEngine(), this._scene.postProcesses.push(this), this.uniqueId = this._scene.getUniqueId()) : o && (this._engine = o, this._engine.postProcesses.push(this)), this._options = r, this.renderTargetSamplingMode = a || 1, this._reusable = l || !1, this._textureType = h, this._textureFormat = p, this._shaderLanguage = _, this._samplers = s || [], this._samplers.push("textureSampler"), this._fragmentUrl = t, this._vertexUrl = u, this._parameters = i || [], this._parameters.push("scale"), this._indexParameters = f, this._drawWrapper = new nt(this._engine), m || this.updateEffect(d);
+  constructor(e, t, i, s, r, n, a = 1, o, l, d = null, h = 0, u = "postprocess", f, g = !1, p = 5, _ = Nt.GLSL) {
+    this._parentContainer = null, this.width = -1, this.height = -1, this.nodeMaterialSource = null, this._outputTexture = null, this.autoClear = !0, this.forceAutoClearInAlphaMode = !1, this.alphaMode = 0, this.animations = new Array(), this.enablePixelPerfectMode = !1, this.forceFullscreenViewport = !0, this.scaleMode = 1, this.alwaysForcePOT = !1, this._samples = 1, this.adaptScaleToCurrentViewport = !1, this._reusable = !1, this._renderId = 0, this.externalTextureSamplerBinding = !1, this._textures = new ft(2), this._textureCache = [], this._currentRenderTextureInd = 0, this._scaleRatio = new Ae(1, 1), this._texelSize = Ae.Zero(), this.onActivateObservable = new V(), this.onSizeChangedObservable = new V(), this.onApplyObservable = new V(), this.onBeforeRenderObservable = new V(), this.onAfterRenderObservable = new V(), this.name = e, n != null ? (this._camera = n, this._scene = n.getScene(), n.attachPostProcess(this), this._engine = this._scene.getEngine(), this._scene.postProcesses.push(this), this.uniqueId = this._scene.getUniqueId()) : o && (this._engine = o, this._engine.postProcesses.push(this)), this._options = r, this.renderTargetSamplingMode = a || 1, this._reusable = l || !1, this._textureType = h, this._textureFormat = p, this._shaderLanguage = _, this._samplers = s || [], this._samplers.push("textureSampler"), this._fragmentUrl = t, this._vertexUrl = u, this._parameters = i || [], this._parameters.push("scale"), this._indexParameters = f, this._drawWrapper = new nt(this._engine), g || this.updateEffect(d);
   }
   /**
    * Gets a string identifying the name of the class
@@ -3174,13 +3174,13 @@ class P {
     const d = (t ? t.height : this._engine.getRenderHeight(!0)) * this._options | 0, h = e.parent;
     h && (h.leftCamera == e || h.rightCamera == e) && (l /= 2);
     let u = this._options.width || l, f = this._options.height || d;
-    const m = this.renderTargetSamplingMode !== 7 && this.renderTargetSamplingMode !== 1 && this.renderTargetSamplingMode !== 2;
+    const g = this.renderTargetSamplingMode !== 7 && this.renderTargetSamplingMode !== 1 && this.renderTargetSamplingMode !== 2;
     if (!this._shareOutputWithPostProcess && !this._forcedOutputTexture) {
       if (this.adaptScaleToCurrentViewport) {
         const _ = a.currentViewport;
         _ && (u *= _.width, f *= _.height);
       }
-      (m || this.alwaysForcePOT) && (this._options.width || (u = a.needPOTTextures ? ve.GetExponentOfTwo(u, o, this.scaleMode) : u), this._options.height || (f = a.needPOTTextures ? ve.GetExponentOfTwo(f, o, this.scaleMode) : f)), (this.width !== u || this.height !== f) && this._resize(u, f, e, m, i), this._textures.forEach((_) => {
+      (g || this.alwaysForcePOT) && (this._options.width || (u = a.needPOTTextures ? ve.GetExponentOfTwo(u, o, this.scaleMode) : u), this._options.height || (f = a.needPOTTextures ? ve.GetExponentOfTwo(f, o, this.scaleMode) : f)), (this.width !== u || this.height !== f) && this._resize(u, f, e, g, i), this._textures.forEach((_) => {
         _.samples !== this.samples && this._engine.updateRenderTargetTextureSampleCount(_, this.samples);
       }), this._flushTextureCache(), this._renderId++;
     }
@@ -3192,9 +3192,9 @@ class P {
     else {
       p = this.inputTexture;
       let _;
-      for (let g = 0; g < this._textureCache.length; g++)
-        if (this._textureCache[g].texture === p) {
-          _ = this._textureCache[g];
+      for (let m = 0; m < this._textureCache.length; m++)
+        if (this._textureCache[m].texture === p) {
+          _ = this._textureCache[m];
           break;
         }
       _ && (_.lastUsedRenderId = this._renderId);
@@ -3533,18 +3533,18 @@ class de extends P {
     const i = this._kernel, s = (i - 1) / 2;
     let r = [], n = [], a = 0;
     for (let _ = 0; _ < i; _++) {
-      const g = _ / (i - 1), b = this._gaussianWeight(g * 2 - 1);
+      const m = _ / (i - 1), b = this._gaussianWeight(m * 2 - 1);
       r[_] = _ - s, n[_] = b, a += b;
     }
     for (let _ = 0; _ < n.length; _++)
       n[_] /= a;
     const o = [], l = [], d = [];
     for (let _ = 0; _ <= s; _ += 2) {
-      const g = Math.min(_ + 1, Math.floor(s));
-      if (_ === g)
+      const m = Math.min(_ + 1, Math.floor(s));
+      if (_ === m)
         d.push({ o: r[_], w: n[_] });
       else {
-        const A = g === s, v = n[_] + n[g] * (A ? 0.5 : 1), y = r[_] + 1 / (1 + n[_] / n[g]);
+        const A = m === s, v = n[_] + n[m] * (A ? 0.5 : 1), y = r[_] + 1 / (1 + n[_] / n[m]);
         y === 0 ? (d.push({ o: r[_], w: n[_] }), d.push({ o: r[_ + 1], w: n[_ + 1] })) : (d.push({ o: y, w: v }), d.push({ o: -y, w: v }));
       }
     }
@@ -3552,19 +3552,19 @@ class de extends P {
       l[_] = d[_].o, o[_] = d[_].w;
     r = l, n = o;
     const h = this.getEngine().getCaps().maxVaryingVectors, u = Math.max(h, 0) - 1;
-    let f = Math.min(r.length, u), m = "";
-    m += this._staticDefines, this._staticDefines.indexOf("DOF") != -1 && (m += `#define CENTER_WEIGHT ${this._glslFloat(n[f - 1])}\r
+    let f = Math.min(r.length, u), g = "";
+    g += this._staticDefines, this._staticDefines.indexOf("DOF") != -1 && (g += `#define CENTER_WEIGHT ${this._glslFloat(n[f - 1])}\r
 `, f--);
     for (let _ = 0; _ < f; _++)
-      m += `#define KERNEL_OFFSET${_} ${this._glslFloat(r[_])}\r
-`, m += `#define KERNEL_WEIGHT${_} ${this._glslFloat(n[_])}\r
+      g += `#define KERNEL_OFFSET${_} ${this._glslFloat(r[_])}\r
+`, g += `#define KERNEL_WEIGHT${_} ${this._glslFloat(n[_])}\r
 `;
     let p = 0;
     for (let _ = u; _ < r.length; _++)
-      m += `#define KERNEL_DEP_OFFSET${p} ${this._glslFloat(r[_])}\r
-`, m += `#define KERNEL_DEP_WEIGHT${p} ${this._glslFloat(n[_])}\r
+      g += `#define KERNEL_DEP_OFFSET${p} ${this._glslFloat(r[_])}\r
+`, g += `#define KERNEL_DEP_WEIGHT${p} ${this._glslFloat(n[_])}\r
 `, p++;
-    this.packedFloat && (m += "#define PACKEDFLOAT 1"), this._blockCompilation = !1, super.updateEffect(m, null, null, {
+    this.packedFloat && (g += "#define PACKEDFLOAT 1"), this._blockCompilation = !1, super.updateEffect(g, null, null, {
       varyingCount: f,
       depCount: p
     }, e, t);
@@ -3620,7 +3620,7 @@ E([
   Ut()
 ], de.prototype, "direction", void 0);
 Xe("BABYLON.BlurPostProcess", de);
-const mi = "bayerDitherFunctions", gi = `float bayerDither2(vec2 _P) {
+const gi = "bayerDitherFunctions", mi = `float bayerDither2(vec2 _P) {
 return mod(2.0*_P.y+_P.x+1.0,4.0);
 }
 float bayerDither4(vec2 _P) {
@@ -3635,7 +3635,7 @@ vec2 P4=floor(0.25*mod(_P,8.0));
 return 4.0*(4.0*bayerDither2(P1)+bayerDither2(P2))+bayerDither2(P4);
 }
 `;
-w.IncludesShadersStore[mi] = gi;
+w.IncludesShadersStore[gi] = mi;
 const Si = "shadowMapFragmentExtraDeclaration", Mi = `#if SM_FLOAT==0
 #include<packingFunctions>
 #endif
@@ -4266,7 +4266,7 @@ class M {
   }
   _createTargetRenderTexture() {
     const e = this._scene.getEngine();
-    e._features.supportDepthStencilTexture ? (this._shadowMap = new q(this._light.name + "_shadowMap", this._mapSize, this._scene, !1, !0, this._textureType, this._light.needCube(), void 0, !1, !1), this._shadowMap.createDepthStencilTexture(e.useReverseDepthBuffer ? 516 : 513, !0)) : this._shadowMap = new q(this._light.name + "_shadowMap", this._mapSize, this._scene, !1, !0, this._textureType, this._light.needCube());
+    e._features.supportDepthStencilTexture ? (this._shadowMap = new J(this._light.name + "_shadowMap", this._mapSize, this._scene, !1, !0, this._textureType, this._light.needCube(), void 0, !1, !1), this._shadowMap.createDepthStencilTexture(e.useReverseDepthBuffer ? 516 : 513, !0)) : this._shadowMap = new J(this._light.name + "_shadowMap", this._mapSize, this._scene, !1, !0, this._textureType, this._light.needCube());
   }
   _initializeShadowMap() {
     if (this._createTargetRenderTexture(), this._shadowMap === null)
@@ -4298,7 +4298,7 @@ class M {
   }
   _initializeBlurRTTAndPostProcesses() {
     const e = this._scene.getEngine(), t = this._mapSize / this.blurScale;
-    (!this.useKernelBlur || this.blurScale !== 1) && (this._shadowMap2 = new q(this._light.name + "_shadowMap2", t, this._scene, !1, !0, this._textureType, void 0, void 0, !1), this._shadowMap2.wrapU = I.CLAMP_ADDRESSMODE, this._shadowMap2.wrapV = I.CLAMP_ADDRESSMODE, this._shadowMap2.updateSamplingMode(I.BILINEAR_SAMPLINGMODE)), this.useKernelBlur ? (this._kernelBlurXPostprocess = new de(this._light.name + "KernelBlurX", new Ae(1, 0), this.blurKernel, 1, null, I.BILINEAR_SAMPLINGMODE, e, !1, this._textureType), this._kernelBlurXPostprocess.width = t, this._kernelBlurXPostprocess.height = t, this._kernelBlurXPostprocess.externalTextureSamplerBinding = !0, this._kernelBlurXPostprocess.onApplyObservable.add((i) => {
+    (!this.useKernelBlur || this.blurScale !== 1) && (this._shadowMap2 = new J(this._light.name + "_shadowMap2", t, this._scene, !1, !0, this._textureType, void 0, void 0, !1), this._shadowMap2.wrapU = I.CLAMP_ADDRESSMODE, this._shadowMap2.wrapV = I.CLAMP_ADDRESSMODE, this._shadowMap2.updateSamplingMode(I.BILINEAR_SAMPLINGMODE)), this.useKernelBlur ? (this._kernelBlurXPostprocess = new de(this._light.name + "KernelBlurX", new Ae(1, 0), this.blurKernel, 1, null, I.BILINEAR_SAMPLINGMODE, e, !1, this._textureType), this._kernelBlurXPostprocess.width = t, this._kernelBlurXPostprocess.height = t, this._kernelBlurXPostprocess.externalTextureSamplerBinding = !0, this._kernelBlurXPostprocess.onApplyObservable.add((i) => {
       i.setTexture("textureSampler", this._shadowMap);
     }), this._kernelBlurYPostprocess = new de(this._light.name + "KernelBlurY", new Ae(0, 1), this.blurKernel, 1, null, I.BILINEAR_SAMPLINGMODE, e, !1, this._textureType), this._kernelBlurXPostprocess.autoClear = !1, this._kernelBlurYPostprocess.autoClear = !1, this._textureType === 0 && (this._kernelBlurXPostprocess.packedFloat = !0, this._kernelBlurYPostprocess.packedFloat = !0), this._blurPostProcesses = [this._kernelBlurXPostprocess, this._kernelBlurYPostprocess]) : (this._boxBlurPostprocess = new P(this._light.name + "DepthBoxBlur", "depthBoxBlur", ["screenSize", "boxOffset"], [], 1, null, I.BILINEAR_SAMPLINGMODE, e, !1, "#define OFFSET " + this._blurBoxOffset, this._textureType), this._boxBlurPostprocess.externalTextureSamplerBinding = !0, this._boxBlurPostprocess.onApplyObservable.add((i) => {
       i.setFloat2("screenSize", t, t), i.setTexture("textureSampler", this._shadowMap);
@@ -4337,33 +4337,33 @@ class M {
     const f = r._getInstancesRenderList(e._id, !!e.getReplacementMesh());
     if (f.mustReturn)
       return;
-    const m = o.getCaps().instancedArrays && (f.visibleInstances[e._id] !== null && f.visibleInstances[e._id] !== void 0 || r.hasThinInstances);
+    const g = o.getCaps().instancedArrays && (f.visibleInstances[e._id] !== null && f.visibleInstances[e._id] !== void 0 || r.hasThinInstances);
     if (!(this.customAllowRendering && !this.customAllowRendering(e)))
-      if (this.isReady(e, m, t)) {
+      if (this.isReady(e, g, t)) {
         e._renderId = a.getRenderId();
-        const p = l.shadowDepthWrapper, _ = (s = p == null ? void 0 : p.getEffect(e, this, o.currentRenderPassId)) !== null && s !== void 0 ? s : e._getDrawWrapper(), g = nt.GetEffect(_);
-        o.enableEffect(_), m || r._bind(e, g, l.fillMode), this.getTransformMatrix(), g.setFloat3("biasAndScaleSM", this.bias, this.normalBias, this.depthScale), this.getLight().getTypeID() === x.LIGHTTYPEID_DIRECTIONALLIGHT ? g.setVector3("lightDataSM", this._cachedDirection) : g.setVector3("lightDataSM", this._cachedPosition);
+        const p = l.shadowDepthWrapper, _ = (s = p == null ? void 0 : p.getEffect(e, this, o.currentRenderPassId)) !== null && s !== void 0 ? s : e._getDrawWrapper(), m = nt.GetEffect(_);
+        o.enableEffect(_), g || r._bind(e, m, l.fillMode), this.getTransformMatrix(), m.setFloat3("biasAndScaleSM", this.bias, this.normalBias, this.depthScale), this.getLight().getTypeID() === x.LIGHTTYPEID_DIRECTIONALLIGHT ? m.setVector3("lightDataSM", this._cachedDirection) : m.setVector3("lightDataSM", this._cachedPosition);
         const b = this._getCamera();
-        if (b && g.setFloat2("depthValuesSM", this.getLight().getDepthMinZ(b), this.getLight().getDepthMinZ(b) + this.getLight().getDepthMaxZ(b)), t && this.enableSoftTransparentShadow && g.setFloat("softTransparentShadowSM", n.visibility * l.alpha), p)
+        if (b && m.setFloat2("depthValuesSM", this.getLight().getDepthMinZ(b), this.getLight().getDepthMinZ(b) + this.getLight().getDepthMaxZ(b)), t && this.enableSoftTransparentShadow && m.setFloat("softTransparentShadowSM", n.visibility * l.alpha), p)
           e._setMainDrawWrapperOverride(_), p.standalone ? p.baseMaterial.bindForSubMesh(n.getWorldMatrix(), r, e) : l.bindForSubMesh(n.getWorldMatrix(), r, e), e._setMainDrawWrapperOverride(null);
         else {
-          if (this._opacityTexture && (g.setTexture("diffuseSampler", this._opacityTexture), g.setMatrix("diffuseMatrix", this._opacityTexture.getTextureMatrix() || this._defaultTextureMatrix)), r.useBones && r.computeBonesUsingShaders && r.skeleton) {
+          if (this._opacityTexture && (m.setTexture("diffuseSampler", this._opacityTexture), m.setMatrix("diffuseMatrix", this._opacityTexture.getTextureMatrix() || this._defaultTextureMatrix)), r.useBones && r.computeBonesUsingShaders && r.skeleton) {
             const v = r.skeleton;
             if (v.isUsingTextureForMatrices) {
               const y = v.getTransformMatrixTexture(r);
               if (!y)
                 return;
-              g.setTexture("boneSampler", y), g.setFloat("boneTextureWidth", 4 * (v.bones.length + 1));
+              m.setTexture("boneSampler", y), m.setFloat("boneTextureWidth", 4 * (v.bones.length + 1));
             } else
-              g.setMatrices("mBones", v.getTransformMatrices(r));
+              m.setMatrices("mBones", v.getTransformMatrices(r));
           }
-          Z.BindMorphTargetParameters(r, g), r.morphTargetManager && r.morphTargetManager.isUsingTextureForTargets && r.morphTargetManager._bind(g), at(g, l, a);
+          Z.BindMorphTargetParameters(r, m), r.morphTargetManager && r.morphTargetManager.isUsingTextureForTargets && r.morphTargetManager._bind(m), at(m, l, a);
         }
-        !this._useUBO && !p && this._bindCustomEffectForRenderSubMeshForShadowMap(e, g, n), Z.BindSceneUniformBuffer(g, this._scene.getSceneUniformBuffer()), this._scene.getSceneUniformBuffer().bindUniformBuffer();
+        !this._useUBO && !p && this._bindCustomEffectForRenderSubMeshForShadowMap(e, m, n), Z.BindSceneUniformBuffer(m, this._scene.getSceneUniformBuffer()), this._scene.getSceneUniformBuffer().bindUniformBuffer();
         const A = n.getWorldMatrix();
-        m && (n.getMeshUniformBuffer().bindToEffect(g, "Mesh"), n.transferToEffect(A)), this.forceBackFacesOnly && o.setState(!0, 0, !1, !0, l.cullBackFaces), this.onBeforeShadowMapRenderMeshObservable.notifyObservers(r), this.onBeforeShadowMapRenderObservable.notifyObservers(g), r._processRendering(n, e, g, l.fillMode, f, m, (v, y) => {
-          n !== r && !v ? (r.getMeshUniformBuffer().bindToEffect(g, "Mesh"), r.transferToEffect(y)) : (n.getMeshUniformBuffer().bindToEffect(g, "Mesh"), n.transferToEffect(v ? y : A));
-        }), this.forceBackFacesOnly && o.setState(!0, 0, !1, !1, l.cullBackFaces), this.onAfterShadowMapRenderObservable.notifyObservers(g), this.onAfterShadowMapRenderMeshObservable.notifyObservers(r);
+        g && (n.getMeshUniformBuffer().bindToEffect(m, "Mesh"), n.transferToEffect(A)), this.forceBackFacesOnly && o.setState(!0, 0, !1, !0, l.cullBackFaces), this.onBeforeShadowMapRenderMeshObservable.notifyObservers(r), this.onBeforeShadowMapRenderObservable.notifyObservers(m), r._processRendering(n, e, m, l.fillMode, f, g, (v, y) => {
+          n !== r && !v ? (r.getMeshUniformBuffer().bindToEffect(m, "Mesh"), r.transferToEffect(y)) : (n.getMeshUniformBuffer().bindToEffect(m, "Mesh"), n.transferToEffect(v ? y : A));
+        }), this.forceBackFacesOnly && o.setState(!0, 0, !1, !1, l.cullBackFaces), this.onAfterShadowMapRenderObservable.notifyObservers(m), this.onAfterShadowMapRenderMeshObservable.notifyObservers(r);
       } else
         this._shadowMap && this._shadowMap.resetRefreshCounter();
   }
@@ -4458,11 +4458,11 @@ class M {
         const b = (s = r.alphaCutOff) !== null && s !== void 0 ? s : M.DEFAULT_ALPHA_CUTOFF;
         a.push("#define ALPHATEXTURE"), f && a.push(`#define ALPHATESTVALUE ${b}${b % 1 === 0 ? "." : ""}`), u.isVerticesDataPresent(D.UVKind) && (h.push(D.UVKind), a.push("#define UV1")), u.isVerticesDataPresent(D.UV2Kind) && this._opacityTexture.coordinatesIndex === 1 && (h.push(D.UV2Kind), a.push("#define UV2"));
       }
-      const m = new Ct();
+      const g = new Ct();
       if (u.useBones && u.computeBonesUsingShaders && u.skeleton) {
         h.push(D.MatricesIndicesKind), h.push(D.MatricesWeightsKind), u.numBoneInfluencers > 4 && (h.push(D.MatricesIndicesExtraKind), h.push(D.MatricesWeightsExtraKind));
         const b = u.skeleton;
-        a.push("#define NUM_BONE_INFLUENCERS " + u.numBoneInfluencers), u.numBoneInfluencers > 0 && m.addCPUSkinningFallback(0, u), b.isUsingTextureForMatrices ? a.push("#define BONETEXTURE") : a.push("#define BonesPerMesh " + (b.bones.length + 1));
+        a.push("#define NUM_BONE_INFLUENCERS " + u.numBoneInfluencers), u.numBoneInfluencers > 0 && g.addCPUSkinningFallback(0, u), b.isUsingTextureForMatrices ? a.push("#define BONETEXTURE") : a.push("#define BonesPerMesh " + (b.bones.length + 1));
       } else
         a.push("#define NUM_BONE_INFLUENCERS 0");
       const p = u.morphTargetManager;
@@ -4470,10 +4470,10 @@ class M {
       if (p && p.numInfluencers > 0 && (a.push("#define MORPHTARGETS"), _ = p.numInfluencers, a.push("#define NUM_MORPH_INFLUENCERS " + _), p.isUsingTextureForTargets && a.push("#define MORPHTARGETS_TEXTURE"), Z.PrepareAttributesForMorphTargetsInfluencers(h, u, _)), Rt(r, this._scene, a), t && (a.push("#define INSTANCES"), Z.PushAttributesForInstances(h), e.getRenderingMesh().hasThinInstances && a.push("#define THIN_INSTANCES")), this.customShaderOptions && this.customShaderOptions.defines)
         for (const b of this.customShaderOptions.defines)
           a.indexOf(b) === -1 && a.push(b);
-      const g = a.join(`
+      const m = a.join(`
 `);
-      if (d !== g) {
-        d = g;
+      if (d !== m) {
+        d = m;
         let b = "shadowMap";
         const A = [
           "world",
@@ -4491,14 +4491,14 @@ class M {
         ], v = ["diffuseSampler", "boneSampler", "morphTargets"], y = ["Scene", "Mesh"];
         if (ot(A), this.customShaderOptions) {
           if (b = this.customShaderOptions.shaderName, this.customShaderOptions.attributes)
-            for (const W of this.customShaderOptions.attributes)
-              h.indexOf(W) === -1 && h.push(W);
+            for (const H of this.customShaderOptions.attributes)
+              h.indexOf(H) === -1 && h.push(H);
           if (this.customShaderOptions.uniforms)
-            for (const W of this.customShaderOptions.uniforms)
-              A.indexOf(W) === -1 && A.push(W);
+            for (const H of this.customShaderOptions.uniforms)
+              A.indexOf(H) === -1 && A.push(H);
           if (this.customShaderOptions.samplers)
-            for (const W of this.customShaderOptions.samplers)
-              v.indexOf(W) === -1 && v.push(W);
+            for (const H of this.customShaderOptions.samplers)
+              v.indexOf(H) === -1 && v.push(H);
         }
         const K = this._scene.getEngine();
         l = K.createEffect(b, {
@@ -4506,8 +4506,8 @@ class M {
           uniformsNames: A,
           uniformBuffersNames: y,
           samplers: v,
-          defines: g,
-          fallbacks: m,
+          defines: m,
+          fallbacks: g,
           onCompiled: null,
           onError: null,
           indexParameters: { maxSimultaneousMorphTargets: _ }
@@ -4786,7 +4786,7 @@ class $e {
     const o = e.getEngine();
     this._camera = i, r !== I.NEAREST_SAMPLINGMODE && (t === 1 && !o._caps.textureFloatLinearFiltering && (r = I.NEAREST_SAMPLINGMODE), t === 2 && !o._caps.textureHalfFloatLinearFiltering && (r = I.NEAREST_SAMPLINGMODE));
     const l = this.isPacked || !o._features.supportExtendedTextureFormats ? 5 : 6;
-    this._depthMap = new q(a ?? "DepthRenderer", { width: o.getRenderWidth(), height: o.getRenderHeight() }, this._scene, !1, !0, t, !1, r, void 0, void 0, void 0, l), this._depthMap.wrapU = I.CLAMP_ADDRESSMODE, this._depthMap.wrapV = I.CLAMP_ADDRESSMODE, this._depthMap.refreshRate = 1, this._depthMap.renderParticles = !1, this._depthMap.renderList = null, this._depthMap.activeCamera = this._camera, this._depthMap.ignoreCameraViewport = !0, this._depthMap.useCameraPostProcesses = !1, this._depthMap.onClearObservable.add((h) => {
+    this._depthMap = new J(a ?? "DepthRenderer", { width: o.getRenderWidth(), height: o.getRenderHeight() }, this._scene, !1, !0, t, !1, r, void 0, void 0, void 0, l), this._depthMap.wrapU = I.CLAMP_ADDRESSMODE, this._depthMap.wrapV = I.CLAMP_ADDRESSMODE, this._depthMap.refreshRate = 1, this._depthMap.renderParticles = !1, this._depthMap.renderList = null, this._depthMap.activeCamera = this._camera, this._depthMap.ignoreCameraViewport = !0, this._depthMap.useCameraPostProcesses = !1, this._depthMap.onClearObservable.add((h) => {
       h.clear(this.clearColor, !0, !0, !0);
     }), this._depthMap.onBeforeBindObservable.add(() => {
       var h;
@@ -4796,8 +4796,8 @@ class $e {
       (h = o._debugPopGroup) === null || h === void 0 || h.call(o, 1);
     }), this._depthMap.customIsReadyFunction = (h, u, f) => {
       if ((f || u === 0) && h.subMeshes)
-        for (let m = 0; m < h.subMeshes.length; ++m) {
-          const p = h.subMeshes[m], _ = p.getRenderingMesh(), g = _._getInstancesRenderList(p._id, !!p.getReplacementMesh()), b = o.getCaps().instancedArrays && (g.visibleInstances[p._id] !== null && g.visibleInstances[p._id] !== void 0 || _.hasThinInstances);
+        for (let g = 0; g < h.subMeshes.length; ++g) {
+          const p = h.subMeshes[g], _ = p.getRenderingMesh(), m = _._getInstancesRenderList(p._id, !!p.getReplacementMesh()), b = o.getCaps().instancedArrays && (m.visibleInstances[p._id] !== null && m.visibleInstances[p._id] !== void 0 || _.hasThinInstances);
           if (!this.isReady(p, b))
             return !1;
         }
@@ -4805,54 +4805,54 @@ class $e {
     };
     const d = (h) => {
       var u, f;
-      const m = h.getRenderingMesh(), p = h.getEffectiveMesh(), _ = this._scene, g = _.getEngine(), b = h.getMaterial();
+      const g = h.getRenderingMesh(), p = h.getEffectiveMesh(), _ = this._scene, m = _.getEngine(), b = h.getMaterial();
       if (p._internalAbstractMeshDataInfo._isActiveIntermediate = !1, !b || p.infiniteDistance || b.disableDepthWrite || h.verticesCount === 0 || h._renderId === _.getRenderId())
         return;
       const A = p._getWorldMatrixDeterminant() < 0;
-      let v = (u = m.overrideMaterialSideOrientation) !== null && u !== void 0 ? u : b.sideOrientation;
+      let v = (u = g.overrideMaterialSideOrientation) !== null && u !== void 0 ? u : b.sideOrientation;
       A && (v = v === 0 ? 1 : 0);
       const y = v === 0;
-      g.setState(b.backFaceCulling, 0, !1, y, this.reverseCulling ? !b.cullBackFaces : b.cullBackFaces);
-      const K = m._getInstancesRenderList(h._id, !!h.getReplacementMesh());
+      m.setState(b.backFaceCulling, 0, !1, y, this.reverseCulling ? !b.cullBackFaces : b.cullBackFaces);
+      const K = g._getInstancesRenderList(h._id, !!h.getReplacementMesh());
       if (K.mustReturn)
         return;
-      const W = g.getCaps().instancedArrays && (K.visibleInstances[h._id] !== null && K.visibleInstances[h._id] !== void 0 || m.hasThinInstances), L = this._camera || _.activeCamera;
-      if (this.isReady(h, W) && L) {
+      const H = m.getCaps().instancedArrays && (K.visibleInstances[h._id] !== null && K.visibleInstances[h._id] !== void 0 || g.hasThinInstances), L = this._camera || _.activeCamera;
+      if (this.isReady(h, H) && L) {
         h._renderId = _.getRenderId();
-        const N = (f = p._internalAbstractMeshDataInfo._materialForRenderPass) === null || f === void 0 ? void 0 : f[g.currentRenderPassId];
+        const N = (f = p._internalAbstractMeshDataInfo._materialForRenderPass) === null || f === void 0 ? void 0 : f[m.currentRenderPassId];
         let O = h._getDrawWrapper();
         !O && N && (O = N._getDrawWrapper());
-        const Ye = L.mode === j.ORTHOGRAPHIC_CAMERA;
+        const Ye = L.mode === Q.ORTHOGRAPHIC_CAMERA;
         if (!O)
           return;
         const k = O.effect;
-        g.enableEffect(O), W || m._bind(h, k, b.fillMode), N ? N.bindForSubMesh(p.getWorldMatrix(), p, h) : (k.setMatrix("viewProjection", _.getTransformMatrix()), k.setMatrix("world", p.getWorldMatrix()), this._storeCameraSpaceZ && k.setMatrix("view", _.getViewMatrix()));
+        m.enableEffect(O), H || g._bind(h, k, b.fillMode), N ? N.bindForSubMesh(p.getWorldMatrix(), p, h) : (k.setMatrix("viewProjection", _.getTransformMatrix()), k.setMatrix("world", p.getWorldMatrix()), this._storeCameraSpaceZ && k.setMatrix("view", _.getViewMatrix()));
         let ce, Ee;
-        if (Ye ? (ce = !g.useReverseDepthBuffer && g.isNDCHalfZRange ? 0 : 1, Ee = g.useReverseDepthBuffer && g.isNDCHalfZRange ? 0 : 1) : (ce = g.useReverseDepthBuffer && g.isNDCHalfZRange ? L.minZ : g.isNDCHalfZRange ? 0 : L.minZ, Ee = g.useReverseDepthBuffer && g.isNDCHalfZRange ? 0 : L.maxZ), k.setFloat2("depthValues", ce, ce + Ee), !N) {
+        if (Ye ? (ce = !m.useReverseDepthBuffer && m.isNDCHalfZRange ? 0 : 1, Ee = m.useReverseDepthBuffer && m.isNDCHalfZRange ? 0 : 1) : (ce = m.useReverseDepthBuffer && m.isNDCHalfZRange ? L.minZ : m.isNDCHalfZRange ? 0 : L.minZ, Ee = m.useReverseDepthBuffer && m.isNDCHalfZRange ? 0 : L.maxZ), k.setFloat2("depthValues", ce, ce + Ee), !N) {
           if (b.needAlphaTesting()) {
             const ne = b.getAlphaTestTexture();
             ne && (k.setTexture("diffuseSampler", ne), k.setMatrix("diffuseMatrix", ne.getTextureMatrix()));
           }
-          if (m.useBones && m.computeBonesUsingShaders && m.skeleton) {
-            const ne = m.skeleton;
+          if (g.useBones && g.computeBonesUsingShaders && g.skeleton) {
+            const ne = g.skeleton;
             if (ne.isUsingTextureForMatrices) {
-              const Be = ne.getTransformMatrixTexture(m);
+              const Be = ne.getTransformMatrixTexture(g);
               if (!Be)
                 return;
               k.setTexture("boneSampler", Be), k.setFloat("boneTextureWidth", 4 * (ne.bones.length + 1));
             } else
-              k.setMatrices("mBones", ne.getTransformMatrices(m));
+              k.setMatrices("mBones", ne.getTransformMatrices(g));
           }
-          at(k, b, _), Z.BindMorphTargetParameters(m, k), m.morphTargetManager && m.morphTargetManager.isUsingTextureForTargets && m.morphTargetManager._bind(k);
+          at(k, b, _), Z.BindMorphTargetParameters(g, k), g.morphTargetManager && g.morphTargetManager.isUsingTextureForTargets && g.morphTargetManager._bind(k);
         }
-        m._processRendering(p, h, k, b.fillMode, K, W, (ne, Be) => k.setMatrix("world", Be));
+        g._processRendering(p, h, k, b.fillMode, K, H, (ne, Be) => k.setMatrix("world", Be));
       }
     };
-    this._depthMap.customRenderFunction = (h, u, f, m) => {
+    this._depthMap.customRenderFunction = (h, u, f, g) => {
       let p;
-      if (m.length)
-        for (p = 0; p < m.length; p++)
-          d(m.data[p]);
+      if (g.length)
+        for (p = 0; p < g.length; p++)
+          d(g.data[p]);
       for (p = 0; p < h.length; p++)
         d(h.data[p]);
       for (p = 0; p < u.length; p++)
@@ -4889,9 +4889,9 @@ class $e {
     const h = r.morphTargetManager;
     let u = 0;
     h && h.numInfluencers > 0 && (u = h.numInfluencers, l.push("#define MORPHTARGETS"), l.push("#define NUM_MORPH_INFLUENCERS " + u), h.isUsingTextureForTargets && l.push("#define MORPHTARGETS_TEXTURE"), Z.PrepareAttributesForMorphTargetsInfluencers(d, r, u)), t && (l.push("#define INSTANCES"), Z.PushAttributesForInstances(d), e.getRenderingMesh().hasThinInstances && l.push("#define THIN_INSTANCES")), this._storeNonLinearDepth && l.push("#define NONLINEARDEPTH"), this._storeCameraSpaceZ && l.push("#define STORE_CAMERASPACE_Z"), this.isPacked && l.push("#define PACKED"), Rt(o, n, l);
-    const f = e._getDrawWrapper(void 0, !0), m = f.defines, p = l.join(`
+    const f = e._getDrawWrapper(void 0, !0), g = f.defines, p = l.join(`
 `);
-    if (m !== p) {
+    if (g !== p) {
       const _ = [
         "world",
         "mBones",
@@ -4934,7 +4934,7 @@ class $e {
 $e._SceneComponentInitialization = (c) => {
   throw ht("DepthRendererSceneComponent");
 };
-const Yi = "minmaxReduxPixelShader", Ki = `varying vec2 vUV;
+const Yi = "minmaxReduxPixelShader", ji = `varying vec2 vUV;
 uniform sampler2D textureSampler;
 #if defined(INITIAL)
 uniform sampler2D sourceTexture;
@@ -4990,8 +4990,8 @@ discard;
 }
 #endif
 `;
-w.ShadersStore[Yi] = Ki;
-class ji {
+w.ShadersStore[Yi] = ji;
+class Ki {
   /**
    * Creates a min/max reducer
    * @param camera The camera to use for the post processes
@@ -5083,10 +5083,10 @@ class ji {
       if (d.autoClear = !1, d.forceFullscreenViewport = s, d.onApply = ((h, u) => (f) => {
         h == 1 || u == 1 ? f.setInt2("texSize", h, u) : f.setFloat2("texSize", h, u);
       })(a, o), this._reductionSteps.push(d), l++, a == 1 && o == 1) {
-        const h = (u, f, m) => {
+        const h = (u, f, g) => {
           const p = new Float32Array(4 * u * f), _ = { min: 0, max: 0 };
           return () => {
-            r.getEngine()._readTexturePixels(m.inputTexture.texture, u, f, -1, 0, p, !1), _.min = p[0], _.max = p[1], this.onAfterReductionPerformed.notifyObservers(_);
+            r.getEngine()._readTexturePixels(g.inputTexture.texture, u, f, -1, 0, p, !1), _.min = p[0], _.max = p[1], this.onAfterReductionPerformed.notifyObservers(_);
           };
         };
         d.onAfterRenderObservable.add(h(a, o, d));
@@ -5140,7 +5140,7 @@ class ji {
     this._postProcessManager && e && this._postProcessManager.dispose(), this._sourceTexture = null;
   }
 }
-class Qi extends ji {
+class Qi extends Ki {
   /**
    * Gets the depth renderer used for the computation.
    * Note that the result is null if you provide your own renderer when calling setDepthRenderer.
@@ -5196,7 +5196,7 @@ class Qi extends ji {
     }
   }
 }
-const gt = S.Up(), qi = S.Zero(), F = new S(), Me = new S(), ze = new C();
+const mt = S.Up(), qi = S.Zero(), F = new S(), Me = new S(), ze = new C();
 class B extends M {
   _validateFilter(e) {
     return e === M.FILTER_NONE || e === M.FILTER_PCF || e === M.FILTER_PCSS ? e : (console.error('Unsupported filter "' + e + '"!'), M.FILTER_NONE);
@@ -5449,7 +5449,7 @@ class B extends M {
       return;
     const t = e.minZ, i = e.maxZ, s = i - t, r = this._minDistance, n = this._shadowMaxZ < i && this._shadowMaxZ >= t ? Math.min((this._shadowMaxZ - t) / (i - t), this._maxDistance) : this._maxDistance, a = t + r * s, o = t + n * s, l = o - a, d = o / a;
     for (let h = 0; h < this._cascades.length; ++h) {
-      const u = (h + 1) / this._numCascades, f = a * d ** u, m = a + l * u, p = this._lambda * (f - m) + m;
+      const u = (h + 1) / this._numCascades, f = a * d ** u, g = a + l * u, p = this._lambda * (f - g) + g;
       this._cascades[h].prevBreakDistance = h === 0 ? r : this._cascades[h - 1].breakDistance, this._cascades[h].breakDistance = (p - t) / s, this._viewSpaceFrustumsZ[h] = p, this._frustumLengths[h] = (this._cascades[h].breakDistance - this._cascades[h].prevBreakDistance) * s;
     }
     this._breaksAreDirty = !1;
@@ -5461,7 +5461,7 @@ class B extends M {
     S.NormalizeToRef(this._light.getShadowDirection(0), this._lightDirection), Math.abs(S.Dot(this._lightDirection, S.Up())) === 1 && (this._lightDirection.z = 1e-13), this._cachedDirection.copyFrom(this._lightDirection);
     const i = e.getEngine().useReverseDepthBuffer;
     for (let s = 0; s < this._numCascades; ++s) {
-      this._computeFrustumInWorldSpace(s), this._computeCascadeFrustum(s), this._cascadeMaxExtents[s].subtractToRef(this._cascadeMinExtents[s], F), this._frustumCenter[s].addToRef(this._lightDirection.scale(this._cascadeMinExtents[s].z), this._shadowCameraPos[s]), C.LookAtLHToRef(this._shadowCameraPos[s], this._frustumCenter[s], gt, this._viewMatrices[s]);
+      this._computeFrustumInWorldSpace(s), this._computeCascadeFrustum(s), this._cascadeMaxExtents[s].subtractToRef(this._cascadeMinExtents[s], F), this._frustumCenter[s].addToRef(this._lightDirection.scale(this._cascadeMinExtents[s].z), this._shadowCameraPos[s]), C.LookAtLHToRef(this._shadowCameraPos[s], this._frustumCenter[s], mt, this._viewMatrices[s]);
       let r = 0, n = F.z;
       const a = this._shadowCastersBoundingInfo;
       a.update(this._viewMatrices[s]), n = Math.min(n, a.boundingBox.maximumWorld.z), !this._depthClamp || this.filter === M.FILTER_PCSS ? r = Math.min(r, a.boundingBox.minimumWorld.z) : r = Math.max(r, a.boundingBox.minimumWorld.z), C.OrthoOffCenterLHToRef(this._cascadeMinExtents[s].x, this._cascadeMaxExtents[s].x, this._cascadeMinExtents[s].y, this._cascadeMaxExtents[s].y, i ? n : r, i ? r : n, this._projectionMatrices[s], e.getEngine().isNDCHalfZRange), this._cascadeMinExtents[s].z = r, this._cascadeMaxExtents[s].z = n, this._viewMatrices[s].multiplyToRef(this._projectionMatrices[s], this._transformMatrices[s]), S.TransformCoordinatesToRef(qi, this._transformMatrices[s], F), F.scaleInPlace(this._mapSize / 2), Me.copyFromFloats(Math.round(F.x), Math.round(F.y), Math.round(F.z)), Me.subtractInPlace(F).scaleInPlace(2 / this._mapSize), C.TranslationToRef(Me.x, Me.y, 0, ze), this._projectionMatrices[s].multiplyToRef(ze, this._projectionMatrices[s]), this._viewMatrices[s].multiplyToRef(this._projectionMatrices[s], this._transformMatrices[s]), this._transformMatrices[s].copyToArray(this._transformMatricesAsArray, s * 16);
@@ -5493,7 +5493,7 @@ class B extends M {
         i = Math.ceil(i * 16) / 16, this._cascadeMaxExtents[e].copyFromFloats(i, i, i), this._cascadeMinExtents[e].copyFromFloats(-i, -i, -i);
       } else {
         const i = this._frustumCenter[e];
-        this._frustumCenter[e].addToRef(this._lightDirection, F), C.LookAtLHToRef(i, F, gt, ze);
+        this._frustumCenter[e].addToRef(this._lightDirection, F), C.LookAtLHToRef(i, F, mt, ze);
         for (let s = 0; s < this._frustumCornersWorldSpace[e].length; ++s)
           S.TransformCoordinatesToRef(this._frustumCornersWorldSpace[e][s], ze, F), this._cascadeMinExtents[e].minimizeInPlace(F), this._cascadeMaxExtents[e].maximizeInPlace(F);
       }
@@ -5529,12 +5529,12 @@ class B extends M {
     super(e, t, i, s), this.usePercentageCloserFiltering = !0;
   }
   _initializeGenerator() {
-    var e, t, i, s, r, n, a, o, l, d, h, u, f, m, p, _, g, b, A, v;
-    this.penumbraDarkness = (e = this.penumbraDarkness) !== null && e !== void 0 ? e : 1, this._numCascades = (t = this._numCascades) !== null && t !== void 0 ? t : B.DEFAULT_CASCADES_COUNT, this.stabilizeCascades = (i = this.stabilizeCascades) !== null && i !== void 0 ? i : !1, this._freezeShadowCastersBoundingInfoObservable = (s = this._freezeShadowCastersBoundingInfoObservable) !== null && s !== void 0 ? s : null, this.freezeShadowCastersBoundingInfo = (r = this.freezeShadowCastersBoundingInfo) !== null && r !== void 0 ? r : !1, this._scbiMin = (n = this._scbiMin) !== null && n !== void 0 ? n : new S(0, 0, 0), this._scbiMax = (a = this._scbiMax) !== null && a !== void 0 ? a : new S(0, 0, 0), this._shadowCastersBoundingInfo = (o = this._shadowCastersBoundingInfo) !== null && o !== void 0 ? o : new zt(new S(0, 0, 0), new S(0, 0, 0)), this._breaksAreDirty = (l = this._breaksAreDirty) !== null && l !== void 0 ? l : !0, this._minDistance = (d = this._minDistance) !== null && d !== void 0 ? d : 0, this._maxDistance = (h = this._maxDistance) !== null && h !== void 0 ? h : 1, this._currentLayer = (u = this._currentLayer) !== null && u !== void 0 ? u : 0, this._shadowMaxZ = (p = (f = this._shadowMaxZ) !== null && f !== void 0 ? f : (m = this._getCamera()) === null || m === void 0 ? void 0 : m.maxZ) !== null && p !== void 0 ? p : 1e4, this._debug = (_ = this._debug) !== null && _ !== void 0 ? _ : !1, this._depthClamp = (g = this._depthClamp) !== null && g !== void 0 ? g : !0, this._cascadeBlendPercentage = (b = this._cascadeBlendPercentage) !== null && b !== void 0 ? b : 0.1, this._lambda = (A = this._lambda) !== null && A !== void 0 ? A : 0.5, this._autoCalcDepthBounds = (v = this._autoCalcDepthBounds) !== null && v !== void 0 ? v : !1, this._recreateSceneUBOs(), super._initializeGenerator();
+    var e, t, i, s, r, n, a, o, l, d, h, u, f, g, p, _, m, b, A, v;
+    this.penumbraDarkness = (e = this.penumbraDarkness) !== null && e !== void 0 ? e : 1, this._numCascades = (t = this._numCascades) !== null && t !== void 0 ? t : B.DEFAULT_CASCADES_COUNT, this.stabilizeCascades = (i = this.stabilizeCascades) !== null && i !== void 0 ? i : !1, this._freezeShadowCastersBoundingInfoObservable = (s = this._freezeShadowCastersBoundingInfoObservable) !== null && s !== void 0 ? s : null, this.freezeShadowCastersBoundingInfo = (r = this.freezeShadowCastersBoundingInfo) !== null && r !== void 0 ? r : !1, this._scbiMin = (n = this._scbiMin) !== null && n !== void 0 ? n : new S(0, 0, 0), this._scbiMax = (a = this._scbiMax) !== null && a !== void 0 ? a : new S(0, 0, 0), this._shadowCastersBoundingInfo = (o = this._shadowCastersBoundingInfo) !== null && o !== void 0 ? o : new zt(new S(0, 0, 0), new S(0, 0, 0)), this._breaksAreDirty = (l = this._breaksAreDirty) !== null && l !== void 0 ? l : !0, this._minDistance = (d = this._minDistance) !== null && d !== void 0 ? d : 0, this._maxDistance = (h = this._maxDistance) !== null && h !== void 0 ? h : 1, this._currentLayer = (u = this._currentLayer) !== null && u !== void 0 ? u : 0, this._shadowMaxZ = (p = (f = this._shadowMaxZ) !== null && f !== void 0 ? f : (g = this._getCamera()) === null || g === void 0 ? void 0 : g.maxZ) !== null && p !== void 0 ? p : 1e4, this._debug = (_ = this._debug) !== null && _ !== void 0 ? _ : !1, this._depthClamp = (m = this._depthClamp) !== null && m !== void 0 ? m : !0, this._cascadeBlendPercentage = (b = this._cascadeBlendPercentage) !== null && b !== void 0 ? b : 0.1, this._lambda = (A = this._lambda) !== null && A !== void 0 ? A : 0.5, this._autoCalcDepthBounds = (v = this._autoCalcDepthBounds) !== null && v !== void 0 ? v : !1, this._recreateSceneUBOs(), super._initializeGenerator();
   }
   _createTargetRenderTexture() {
     const e = this._scene.getEngine(), t = { width: this._mapSize, height: this._mapSize, layers: this.numCascades };
-    this._shadowMap = new q(
+    this._shadowMap = new J(
       this._light.name + "_CSMShadowMap",
       t,
       this._scene,
@@ -5916,18 +5916,18 @@ class Ie extends kt {
       r.FOG && l.addFallback(1, "FOG"), Z.HandleFallbacksForShadows(r, l, 1), r.NUM_BONE_INFLUENCERS > 0 && l.addCPUSkinningFallback(0, e), r.IMAGEPROCESSINGPOSTPROCESS = n.imageProcessingConfiguration.applyByPostProcess;
       const d = [D.PositionKind];
       r.NORMAL && d.push(D.NormalKind), Z.PrepareAttributesForBones(d, e, r, l), Z.PrepareAttributesForInstances(d, r);
-      const h = "shadowOnly", u = r.toString(), f = ["world", "view", "viewProjection", "vEyePosition", "vLightsType", "vFogInfos", "vFogColor", "pointSize", "alpha", "shadowColor", "mBones"], m = new Array(), p = new Array();
+      const h = "shadowOnly", u = r.toString(), f = ["world", "view", "viewProjection", "vEyePosition", "vLightsType", "vFogInfos", "vFogColor", "pointSize", "alpha", "shadowColor", "mBones"], g = new Array(), p = new Array();
       ot(f), Z.PrepareUniformsAndSamplersList({
         uniformsNames: f,
         uniformBuffersNames: p,
-        samplers: m,
+        samplers: g,
         defines: r,
         maxSimultaneousLights: 1
       }), t.setEffect(n.getEngine().createEffect(h, {
         attributes: d,
         uniformsNames: f,
         uniformBuffersNames: p,
-        samplers: m,
+        samplers: g,
         defines: u,
         fallbacks: l,
         onCompiled: this.onCompiled,
@@ -6200,7 +6200,7 @@ class us {
     t.type === "color" ? await this.loadColorMaterial(e) : t.type === "standard" ? await this.loadStandardMaterial(e) : console.error(`Material type: ${t.type} not supported`);
   }
 }
-var U, Te, ie, xe, ee, J, H, We, te, Oe, Fe, Q, ye, He, At;
+var U, Te, ie, xe, ee, j, W, We, te, Oe, Fe, q, ye, He, At;
 class ps {
   constructor(e) {
     // add a die to the scene
@@ -6212,13 +6212,13 @@ class ps {
     $(this, ie, 0);
     $(this, xe, []);
     $(this, ee, void 0);
-    $(this, J, void 0);
-    $(this, H, void 0);
+    $(this, j, void 0);
+    $(this, W, void 0);
     $(this, We, void 0);
     $(this, te, void 0);
     $(this, Oe, void 0);
     $(this, Fe, void 0);
-    $(this, Q, void 0);
+    $(this, q, void 0);
     $(this, ye, {});
     he(this, "noop", () => {
     });
@@ -6227,23 +6227,23 @@ class ps {
   }
   // initialize the babylon scene
   async initScene(e) {
-    Y(this, ee, e.canvas), T(this, ee).width = e.width, T(this, ee).height = e.height, this.config = e.options, Y(this, J, Xt(T(this, ee))), Y(this, H, $t({ engine: T(this, J) })), Y(this, We, Yt({ engine: T(this, J), scene: T(this, H) })), Y(this, te, St({
+    Y(this, ee, e.canvas), T(this, ee).width = e.width, T(this, ee).height = e.height, this.config = e.options, Y(this, j, Xt(T(this, ee))), Y(this, W, $t({ engine: T(this, j) })), Y(this, We, Yt({ engine: T(this, j), scene: T(this, W) })), Y(this, te, St({
       enableShadows: this.config.enableShadows,
       shadowTransparency: this.config.shadowTransparency,
       intensity: this.config.lightIntensity,
-      scene: T(this, H)
+      scene: T(this, W)
     })), Y(this, Oe, new ls({
       enableShadows: this.config.enableShadows,
       aspect: T(this, ee).width / T(this, ee).height,
       lights: T(this, te),
-      scene: T(this, H)
-    })), Y(this, Fe, new us({ scene: T(this, H) })), this.onInitComplete();
+      scene: T(this, W)
+    })), Y(this, Fe, new us({ scene: T(this, W) })), this.onInitComplete();
   }
   connect(e) {
-    Y(this, Q, e), T(this, Q).postMessage({
+    Y(this, q, e), T(this, q).postMessage({
       action: "initBuffer",
       diceBuffer: this.diceBufferView.buffer
-    }, [this.diceBufferView.buffer]), T(this, Q).onmessage = (t) => {
+    }, [this.diceBufferView.buffer]), T(this, q).onmessage = (t) => {
       switch (t.data.action) {
         case "updates":
           this.updatesFromPhysics(t.data.diceBuffer);
@@ -6261,7 +6261,7 @@ class ps {
         enableShadows: this.config.enableShadows,
         shadowTransparency: this.config.shadowTransparency,
         intensity: this.config.lightIntensity,
-        scene: T(this, H)
+        scene: T(this, W)
       }
     ))), t.scale !== this.config.scale && Object.values(T(this, U)).forEach(({ mesh: i }) => {
       var s;
@@ -6277,24 +6277,30 @@ class ps {
   }
   // all this does is start the render engine.
   render(e) {
-    T(this, J).runRenderLoop(this.renderLoop.bind(this)), T(this, Q).postMessage({
+    T(this, j).runRenderLoop(this.renderLoop.bind(this)), T(this, q).postMessage({
       action: "resumeSimulation",
       newStartPoint: e
     });
   }
   renderLoop() {
-    T(this, ie) && T(this, ie) === Object.keys(T(this, U)).length ? (T(this, J).stopRenderLoop(), T(this, Q).postMessage({
-      action: "stopSimulation"
-    }), this.onRollComplete()) : T(this, H).render();
+    if (T(this, ie) && T(this, ie) === Object.keys(T(this, U)).length) {
+      if (T(this, j).stopRenderLoop(), T(this, q).postMessage({
+        action: "stopSimulation"
+      }), this.onRollComplete(), this.config.highlightResult) {
+        const e = typeof this.config.highlightResult == "object" && this.config.highlightResult !== null ? this.config.highlightResult.durationMs ?? 3500 : 3500, t = () => T(this, W).render();
+        T(this, j).runRenderLoop(t), setTimeout(() => T(this, j).stopRenderLoop(), e + 200);
+      }
+    } else
+      T(this, W).render();
   }
   async loadTheme(e) {
     const { theme: t, basePath: i, material: s, meshFilePath: r, meshName: n } = e;
     if (await T(this, Fe).load({ theme: t, basePath: i, material: s }), !Object.keys(T(this, ye)).includes(n)) {
       T(this, ye)[n] = r;
-      const a = await Se.loadModels({ meshFilePath: r, meshName: n }, T(this, H));
+      const a = await Se.loadModels({ meshFilePath: r, meshName: n }, T(this, W));
       if (!a)
         throw new Error("No colliders returned from the 3D mesh file. Low poly colliders are expected to be in the same file as the high poly dice and the mesh name contains the word 'collider'");
-      T(this, Q).postMessage({
+      T(this, q).postMessage({
         action: "loadModels",
         options: {
           colliders: a,
@@ -6305,19 +6311,19 @@ class ps {
     this.onThemeLoaded({ id: t });
   }
   clear() {
-    !Object.keys(T(this, U)).length && !T(this, ie) || (this.diceBufferView.byteLength && this.diceBufferView.fill(0), T(this, xe).forEach((e) => clearTimeout(e)), T(this, J).stopRenderLoop(), Object.values(T(this, U)).forEach((e) => {
+    !Object.keys(T(this, U)).length && !T(this, ie) || (this.diceBufferView.byteLength && this.diceBufferView.fill(0), T(this, xe).forEach((e) => clearTimeout(e)), T(this, j).stopRenderLoop(), Object.values(T(this, U)).forEach((e) => {
       e.mesh && e.mesh.dispose();
-    }), Y(this, U, {}), Y(this, Te, 0), Y(this, ie, 0), T(this, H).render());
+    }), Y(this, U, {}), Y(this, Te, 0), Y(this, ie, 0), T(this, W).render());
   }
   add(e) {
-    Se.loadDie(e, T(this, H)).then((t) => {
+    Se.loadDie(e, T(this, W)).then((t) => {
       T(this, xe).push(setTimeout(() => {
         ut(this, He, At).call(this, t);
-      }, me(this, Te)._++ * this.config.delay));
+      }, ge(this, Te)._++ * this.config.delay));
     });
   }
   addNonDie(e) {
-    T(this, J).activeRenderLoops.length === 0 && this.render(!1);
+    T(this, j).activeRenderLoops.length === 0 && this.render(!1);
     const { id: t, value: i, ...s } = e, r = {
       id: t,
       value: i,
@@ -6326,15 +6332,15 @@ class ps {
     T(this, U)[t] = r, setTimeout(() => {
       T(this, xe).push(setTimeout(() => {
         this.handleAsleep(r);
-      }, me(this, Te)._++ * this.config.delay));
+      }, ge(this, Te)._++ * this.config.delay));
     }, 10);
   }
   remove(e) {
     const t = T(this, U)[e.id];
-    t.hasOwnProperty("d10Instance") && (T(this, U)[t.d10Instance.id].mesh && (T(this, U)[t.d10Instance.id].mesh.dispose(), T(this, Q).postMessage({
+    t.hasOwnProperty("d10Instance") && (T(this, U)[t.d10Instance.id].mesh && (T(this, U)[t.d10Instance.id].mesh.dispose(), T(this, q).postMessage({
       action: "removeDie",
       id: t.d10Instance.id
-    })), delete T(this, U)[t.d10Instance.id], me(this, ie)._--), T(this, U)[e.id].mesh && T(this, U)[e.id].mesh.dispose(), delete T(this, U)[e.id], me(this, ie)._--, T(this, H).render(), this.onDieRemoved(e.rollId);
+    })), delete T(this, U)[t.d10Instance.id], ge(this, ie)._--), T(this, U)[e.id].mesh && T(this, U)[e.id].mesh.dispose(), delete T(this, U)[e.id], ge(this, ie)._--, T(this, W).render(), this.onDieRemoved(e.rollId);
   }
   updatesFromPhysics(e) {
     this.diceBufferView = new Float32Array(e);
@@ -6356,7 +6362,7 @@ class ps {
       t = t + 8;
     }
     requestAnimationFrame(() => {
-      T(this, Q).postMessage({
+      T(this, q).postMessage({
         action: "stepSimulation",
         diceBuffer: this.diceBufferView.buffer
       }, [this.diceBufferView.buffer]);
@@ -6365,7 +6371,7 @@ class ps {
   // handle the position updates from the physics worker. It's a simple flat array of numbers for quick and easy transfer
   async handleAsleep(e) {
     var t, i;
-    if (e.asleep = !0, await Se.getRollResult(e, T(this, H), this.config), e.d10Instance || e.dieParent) {
+    if (e.asleep = !0, await Se.getRollResult(e, T(this, W), this.config), e.d10Instance || e.dieParent) {
       if ((t = e == null ? void 0 : e.d10Instance) != null && t.asleep || (i = e == null ? void 0 : e.dieParent) != null && i.asleep) {
         const s = e.config.sides === 100 ? e : e.dieParent, r = e.config.sides === 10 ? e : e.d10Instance;
         s.rawValue && (s.value = s.rawValue), s.rawValue = s.value, s.value = s.value + r.value, this.onRollResult({
@@ -6378,23 +6384,23 @@ class ps {
         rollId: e.config.rollId,
         value: e.value
       });
-    me(this, ie)._++;
+    ge(this, ie)._++;
   }
   resize(e) {
     const t = T(this, ee).width = e.width, i = T(this, ee).height = e.height;
-    T(this, Oe).create({ aspect: t / i }), T(this, J).resize();
+    T(this, Oe).create({ aspect: t / i }), T(this, j).resize();
   }
 }
-U = new WeakMap(), Te = new WeakMap(), ie = new WeakMap(), xe = new WeakMap(), ee = new WeakMap(), J = new WeakMap(), H = new WeakMap(), We = new WeakMap(), te = new WeakMap(), Oe = new WeakMap(), Fe = new WeakMap(), Q = new WeakMap(), ye = new WeakMap(), He = new WeakSet(), At = async function(e) {
-  T(this, J).activeRenderLoops.length === 0 && this.render(e.newStartPoint);
+U = new WeakMap(), Te = new WeakMap(), ie = new WeakMap(), xe = new WeakMap(), ee = new WeakMap(), j = new WeakMap(), W = new WeakMap(), We = new WeakMap(), te = new WeakMap(), Oe = new WeakMap(), Fe = new WeakMap(), q = new WeakMap(), ye = new WeakMap(), He = new WeakSet(), At = async function(e) {
+  T(this, j).activeRenderLoops.length === 0 && this.render(e.newStartPoint);
   const t = {
     ...e,
     assetPath: this.config.assetPath,
     enableShadows: this.config.enableShadows,
     scale: this.config.scale,
     lights: T(this, te)
-  }, i = new Se(t, T(this, H));
-  return T(this, U)[i.id] = i, T(this, Q).postMessage({
+  }, i = new Se(t, T(this, W));
+  return T(this, U)[i.id] = i, T(this, q).postMessage({
     action: "addDie",
     options: {
       sides: e.sides,
@@ -6404,10 +6410,10 @@ U = new WeakMap(), Te = new WeakMap(), ie = new WeakMap(), xe = new WeakMap(), e
       theme: e.theme,
       meshName: e.meshName
     }
-  }), e.sides === 100 && e.data !== "single" && (i.d10Instance = await Se.loadDie({ ...t, dieType: "d10", sides: 10, id: i.id + 1e4 }, T(this, H)).then((s) => {
-    const r = new Se(s, T(this, H));
+  }), e.sides === 100 && e.data !== "single" && (i.d10Instance = await Se.loadDie({ ...t, dieType: "d10", sides: 10, id: i.id + 1e4 }, T(this, W)).then((s) => {
+    const r = new Se(s, T(this, W));
     return r.dieParent = i, r;
-  }), T(this, U)[`${i.d10Instance.id}`] = i.d10Instance, T(this, Q).postMessage({
+  }), T(this, U)[`${i.d10Instance.id}`] = i.d10Instance, T(this, q).postMessage({
     action: "addDie",
     options: {
       sides: 10,
