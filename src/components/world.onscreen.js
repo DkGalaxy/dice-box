@@ -1,5 +1,4 @@
 import { Vector3 } from '@babylonjs/core/Maths/math.vector'
-import { GlowLayer } from '@babylonjs/core/Layers/glowLayer'
 import { createEngine } from './world/engine'
 import { createScene } from './world/scene'
 import { createCamera } from './world/camera'
@@ -7,16 +6,6 @@ import { createLights } from './world/lights'
 import Container from './Container'
 import Dice from './Dice'
 import ThemeLoader from './ThemeLoader'
-
-// '#rrggbb' -> {r,g,b} components in 0..1, used by the number-flare envelope
-const hexToRgb = (hex) => {
-	const h = hex.replace('#', '')
-	return {
-		r: parseInt(h.slice(0, 2), 16) / 255,
-		g: parseInt(h.slice(2, 4), 16) / 255,
-		b: parseInt(h.slice(4, 6), 16) / 255,
-	}
-}
 
 class WorldOnscreen {
 	config
@@ -26,8 +15,6 @@ class WorldOnscreen {
 	#sleeperCount = 0
 	#rollCompleteFired = false
 	#glowLoopStopTimer = null
-	#glowLayer = null
-	#flares = new Map()
 	#dieRollTimer = []
 	#canvas
 	#engine
@@ -239,7 +226,6 @@ class WorldOnscreen {
 		this.#dieCache = {}
 		this.#count = 0
 		this.#sleeperCount = 0
-		this.#flares.clear()
 
 		// step the animation forward
 		this.#scene.render()
@@ -397,14 +383,6 @@ class WorldOnscreen {
 		// get the roll result for this die; pass config so optional features (highlightResult) can activate
 		await Dice.getRollResult(die, this.#scene, this.config)
 
-		// Feature: number flare — bloom the winning die via the GlowLayer.
-		// Mode 'glow' (default) | 'both' use the flare here; 'light' skips it and
-		// leaves the point-light flare in Dice.#spawnFaceGlow in charge instead.
-		const hlMode = (typeof this.config.highlightResult === 'object' && this.config.highlightResult?.mode) || 'glow'
-		if (this.config.highlightResult && die.mesh && hlMode !== 'light') {
-			this.#startFlare(die)
-		}
-
 		if(die.d10Instance || die.dieParent) {
 			if(die?.d10Instance?.asleep || die?.dieParent?.asleep) {
 				const d100 = die.config.sides === 100 ? die : die.dieParent
@@ -430,41 +408,6 @@ class WorldOnscreen {
 			})
 		}
 		this.#sleeperCount++
-	}
-
-	// Feature: number flare — lazily create the GlowLayer the first time a flare fires.
-	// The selector runs per rendered mesh during the glow pass; non-flaring meshes
-	// return transparent (cheap) so only winning dice bloom. The envelope gives a
-	// fast attack then a long quadratic ease-out — that's the "flare" shape.
-	#ensureGlowLayer() {
-		if (this.#glowLayer) return this.#glowLayer
-		const glow = new GlowLayer('numberFlare', this.#scene, { blurKernelSize: 24 })
-		glow.intensity = 1.0
-		glow.customEmissiveColorSelector = (mesh, subMesh, material, result) => {
-			const f = this.#flares.get(mesh.uniqueId)
-			if (!f) { result.set(0, 0, 0, 0); return }
-			const t = (Date.now() - f.start) / f.duration
-			if (t >= 1) { this.#flares.delete(mesh.uniqueId); result.set(0, 0, 0, 0); return }
-			const env = t < 0.12 ? (t / 0.12) : (1 - ((t - 0.12) / 0.88) ** 2)
-			const k = f.peak * Math.max(0, env)
-			result.set(f.r * k, f.g * k, f.b * k, 1)
-		}
-		this.#glowLayer = glow
-		return glow
-	}
-
-	// Register a winning die to flare. color / intensity / durationMs reuse highlightResult.
-	#startFlare(die) {
-		const opt = (typeof this.config.highlightResult === 'object' && this.config.highlightResult !== null)
-			? this.config.highlightResult : {}
-		const { r, g, b } = hexToRgb(opt.color ?? '#ffeecc')
-		this.#ensureGlowLayer()
-		this.#flares.set(die.mesh.uniqueId, {
-			start: Date.now(),
-			duration: opt.durationMs ?? 3500,
-			peak: opt.intensity ?? 0.9,
-			r, g, b,
-		})
 	}
 
 	resize(options) {

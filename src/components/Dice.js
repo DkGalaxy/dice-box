@@ -8,6 +8,7 @@ import '../helpers/babylonFileLoader'
 import '@babylonjs/core/Meshes/instancedMesh'
 
 import { deepCopy } from '../helpers';
+import { applyDerivedBevel, flareWinner } from './glowFx'
 
 
 const defaultOptions = {
@@ -94,6 +95,10 @@ class Dice {
         die.registerInstancedBuffer("customColor", 3)
       }
     }
+
+    // Derive engraved-number bevel (bump map) and glyph emissive mask from the
+    // theme's diffuse texture. Cached per material, so repeat calls are free.
+    applyDerivedBevel(die.material, scene).catch(err => console.warn('[glowFx]', err))
 
     return options
   }
@@ -225,12 +230,16 @@ class Dice {
         d.value = 0
       }
 
-      // Feature: highlightResult — flare the winning face.
-      // mode 'glow' (default) defers to the GlowLayer number flare in world.onscreen;
-      // 'light' | 'both' spawn the close-range point light below.
+      // Feature: highlightResult — flare the winning die.
+      // 'glow' (default): glyph-shaped GlowLayer flare via an overlay mesh.
+      // 'light': close-range point-light face wash.
+      // 'both': stack the two.
       if (config?.highlightResult) {
         const mode = (typeof config.highlightResult === 'object' && config.highlightResult?.mode) || 'glow'
-        if (mode !== 'glow') {
+        if (mode === 'glow' || mode === 'both') {
+          flareWinner(d, scene, config.highlightResult)
+        }
+        if (mode === 'light' || mode === 'both') {
           Dice.#spawnFaceGlow(d, picked, d4FaceDown, scene, config.highlightResult)
         }
       }
@@ -289,12 +298,14 @@ class Dice {
     }
     scene.registerBeforeRender(fade)
 
+    const prevCleanup = d.glowCleanup
     d.glowCleanup = () => {
       if (!disposed) {
         disposed = true
         scene.unregisterBeforeRender(fade)
         light.dispose()
       }
+      try { prevCleanup?.() } catch (e) { /* noop */ }
     }
   }
 }
