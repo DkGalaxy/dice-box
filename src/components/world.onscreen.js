@@ -1,4 +1,5 @@
 import { Vector3 } from '@babylonjs/core/Maths/math.vector'
+import { GlowLayer } from '@babylonjs/core/Layers/glowLayer'
 import { createEngine } from './world/engine'
 import { createScene } from './world/scene'
 import { createCamera } from './world/camera'
@@ -7,12 +8,26 @@ import Container from './Container'
 import Dice from './Dice'
 import ThemeLoader from './ThemeLoader'
 
+// '#rrggbb' -> {r,g,b} components in 0..1, used by the number-flare envelope
+const hexToRgb = (hex) => {
+	const h = hex.replace('#', '')
+	return {
+		r: parseInt(h.slice(0, 2), 16) / 255,
+		g: parseInt(h.slice(2, 4), 16) / 255,
+		b: parseInt(h.slice(4, 6), 16) / 255,
+	}
+}
+
 class WorldOnscreen {
 	config
 	initialized = false
 	#dieCache = {}
 	#count = 0
 	#sleeperCount = 0
+	#rollCompleteFired = false
+	#glowLoopStopTimer = null
+	#glowLayer = null
+	#flares = new Map()
 	#dieRollTimer = []
 	#canvas
 	#engine
@@ -34,16 +49,16 @@ class WorldOnscreen {
 		this.onDieRemoved = options.onDieRemoved || this.noop
 		this.initialized = this.initScene(options)
 	}
-	
+
 	// initialize the babylon scene
 	async initScene(config) {
 		this.#canvas  = config.canvas
 		this.#canvas.width = config.width
 		this.#canvas.height = config.height
-	
+
 		// set the config from World
 		this.config = config.options
-	
+
 		// setup babylonJS scene
 		this.#engine  = createEngine(this.#canvas )
 		this.#scene = createScene({engine:this.#engine })
@@ -54,7 +69,7 @@ class WorldOnscreen {
 			intensity: this.config.lightIntensity,
 			scene: this.#scene
 		})
-	
+
 		// create the box that provides surfaces for shadows to render on
 		this.#container  = new Container({
 			enableShadows: this.config.enableShadows,
@@ -62,7 +77,7 @@ class WorldOnscreen {
 			lights: this.#lights,
 			scene: this.#scene
 		})
-		
+
 		this.#themeLoader = new ThemeLoader({scene: this.#scene})
 
 		// init complete - let the world know
@@ -82,7 +97,7 @@ class WorldOnscreen {
 				case "updates": // dice status/position updates from physics worker
 					this.updatesFromPhysics(e.data.diceBuffer)
 					break;
-			
+
 				default:
 					console.error("action from physicsWorker not found in offscreen worker")
 					break;
@@ -129,7 +144,6 @@ class WorldOnscreen {
 
 	// all this does is start the render engine.
 	render(newStartPoint) {
-		// document.body.addEventListener('click',()=>engine.stopRenderLoop())
 		this.#engine.runRenderLoop(this.renderLoop.bind(this))
 		this.#physicsWorkerPort.postMessage({
 			action: "resumeSimulation",
@@ -140,22 +154,44 @@ class WorldOnscreen {
 	renderLoop() {
 		// if no dice are awake then stop the render loop and save some CPU power
 		if(this.#sleeperCount && this.#sleeperCount === Object.keys(this.#dieCache).length) {
-			this.#physicsWorkerPort.postMessage({ action: "stopSimulation" })
-			this.onRollComplete()
-			this.#engine.stopRenderLoop()
-			return
+			if (!this.#rollCompleteFired) {
+				this.#rollCompleteFired = true
+
+				// stop the physics engine
+				this.#physicsWorkerPort.postMessage({ action: "stopSimulation" })
+
+				// trigger callback that roll is complete
+				this.onRollComplete()
+
+				if (this.config.highlightResult) {
+					// Keep the render loop alive for the glow duration — never call
+					// stopRenderLoop + runRenderLoop as that re-initialises the canvas.
+					// A setTimeout stops the loop cleanly once glows have faded.
+					const hlDuration = (typeof this.config.highlightResult === 'object' && this.config.highlightResult !== null)
+						? (this.config.highlightResult.durationMs ?? 3500)
+						: 3500
+					this.#glowLoopStopTimer = setTimeout(() => {
+						this.#engine.stopRenderLoop()
+						this.#glowLoopStopTimer = null
+					}, hlDuration + 200)
+				} else {
+					this.#engine.stopRenderLoop()
+					return
+				}
+			}
+			// keep rendering so the point-light fade (registerBeforeRender) can run
+			this.#scene.render()
 		}
-		this.#scene.render()
+		// otherwise keep on rendering
+		else {
+			this.#scene.render()
+		}
 	}
 
 	async loadTheme(options) {
-		// await loadTheme(theme, this.config.origin + this.config.assetPath, this.#scene)
 		const {theme, basePath, material, meshFilePath, meshName} = options
-		// load the textures and create the materials needed for this theme
 		await this.#themeLoader.load({theme,basePath,material})
-	
-		// Load the 3D meshes declared by the theme and return the collider mesh data to be passed on to the physics worker
-		// don't load same models twice
+
 		if(!Object.keys(this.#meshList).includes(meshName)){
 			this.#meshList[meshName] = meshFilePath
 			const colliders = await Dice.loadModels({meshFilePath,meshName}, this.#scene)
@@ -163,7 +199,7 @@ class WorldOnscreen {
 			if(!colliders){
 				throw new Error("No colliders returned from the 3D mesh file. Low poly colliders are expected to be in the same file as the high poly dice and the mesh name contains the word 'collider'")
 			}
-		
+
 			this.#physicsWorkerPort.postMessage({
 				action: "loadModels",
 				options: {
@@ -180,13 +216,21 @@ class WorldOnscreen {
 		if(!Object.keys(this.#dieCache).length && !this.#sleeperCount) {
 			return
 		}
+		// cancel the glow-loop stop timer if it's still pending
+		if (this.#glowLoopStopTimer) {
+			clearTimeout(this.#glowLoopStopTimer)
+			this.#glowLoopStopTimer = null
+		}
+		this.#rollCompleteFired = false
 		if(this.diceBufferView.byteLength){
 			this.diceBufferView.fill(0)
 		}
 		this.#dieRollTimer.forEach(timer=>clearTimeout(timer))
 		// stop anything that's currently rendering
 		this.#engine.stopRenderLoop()
+		// remove all dice — also dispose any active point-light glow
 		Object.values(this.#dieCache).forEach(die => {
+			die.glowCleanup?.()
 			if(die.mesh)
 				die.mesh.dispose()
 		})
@@ -195,15 +239,14 @@ class WorldOnscreen {
 		this.#dieCache = {}
 		this.#count = 0
 		this.#sleeperCount = 0
+		this.#flares.clear()
 
 		// step the animation forward
 		this.#scene.render()
 	}
 
 	add(options) {
-		// loadDie allows you to specify sides(dieType) and theme and returns the options you passed in
 		Dice.loadDie(options, this.#scene).then(resp => {
-			// space out adding the dice so they don't lump together too much
 			this.#dieRollTimer.push(setTimeout(() => {
 				this.#add(resp)
 			}, this.#count++ * this.config.delay))
@@ -221,8 +264,7 @@ class WorldOnscreen {
 			config: rest
 		}
 		this.#dieCache[id] = newDie
-		
-		// double timeout to ensure any real dice have a chance to queue up and rollResults isn't triggered right away
+
 		setTimeout(()=>{
 			this.#dieRollTimer.push(setTimeout(() => {
 				this.handleAsleep(newDie)
@@ -242,12 +284,12 @@ class WorldOnscreen {
 			scale: this.config.scale,
 			lights: this.#lights,
 		}
-		
+
 		const newDie = new Dice(diceOptions, this.#scene)
-		
+
 		// save the die just created to the cache
 		this.#dieCache[newDie.id] = newDie
-		
+
 		// tell the physics engine to roll this die type - which is a low poly collider
 		this.#physicsWorkerPort.postMessage({
 			action: "addDie",
@@ -260,17 +302,14 @@ class WorldOnscreen {
 				meshName: options.meshName,
 			}
 		})
-	
+
 		// for d100's we need to add an additional d10 and pair it up with the d100 just created
 		if(options.sides === 100 && options.data !== 'single') {
-			// assign the new die to a property on the d100 - spread the options in order to pass a matching theme
 			newDie.d10Instance = await Dice.loadDie({...diceOptions, dieType: 'd10', sides: 10, id: newDie.id + 10000}, this.#scene).then( response =>  {
 				const d10Instance = new Dice(response, this.#scene)
-				// identify the parent of this d10 so we can calculate the roll result later
 				d10Instance.dieParent = newDie
 				return d10Instance
 			})
-			// add the d10 to the cache and ask the physics worker for a collider
 			this.#dieCache[`${newDie.d10Instance.id}`] = newDie.d10Instance
 			this.#physicsWorkerPort.postMessage({
 				action: "addDie",
@@ -283,54 +322,39 @@ class WorldOnscreen {
 				}
 			})
 		}
-	
-		// return the die instance
+
 		return newDie
-	
 	}
-	
+
 	remove(data) {
-	// TODO: test this with exploding dice
-	const dieData = this.#dieCache[data.id]
-	
-	// check if this is d100 and remove associated d10 first
-	if(dieData.hasOwnProperty('d10Instance')){
-		// remove die
-		if(this.#dieCache[dieData.d10Instance.id].mesh){
-			this.#dieCache[dieData.d10Instance.id].mesh.dispose()
+		const dieData = this.#dieCache[data.id]
 
-			// remove d10 physics body just for d100 items
-			this.#physicsWorkerPort.postMessage({
-				action: "removeDie",
-				id: dieData.d10Instance.id
-			})
+		if(dieData.hasOwnProperty('d10Instance')){
+			if(this.#dieCache[dieData.d10Instance.id].mesh){
+				this.#dieCache[dieData.d10Instance.id].mesh.dispose()
+				this.#physicsWorkerPort.postMessage({
+					action: "removeDie",
+					id: dieData.d10Instance.id
+				})
+			}
+			delete this.#dieCache[dieData.d10Instance.id]
+			this.#sleeperCount--
 		}
-		// delete entry
-		delete this.#dieCache[dieData.d10Instance.id]
-		// decrement count
+
+		if(this.#dieCache[data.id].mesh){
+			this.#dieCache[data.id].mesh.dispose()
+		}
+		delete this.#dieCache[data.id]
 		this.#sleeperCount--
+
+		this.#scene.render()
+		this.onDieRemoved(data.rollId)
 	}
 
-	// remove die
-	if(this.#dieCache[data.id].mesh){
-		this.#dieCache[data.id].mesh.dispose()
-	}
-	// delete entry
-	delete this.#dieCache[data.id]
-	// decrement count
-	this.#sleeperCount--
-
-	// step the animation forward
-	this.#scene.render()
-
-	this.onDieRemoved(data.rollId)
-}
-	
 	updatesFromPhysics(buffer) {
 		this.diceBufferView = new Float32Array(buffer)
 		let bufferIndex = 1
 
-		// loop will be based on diceBufferView[0] value which is the bodies length in physics.worker
 	for (let i = 0, len = this.diceBufferView[0]; i < len; i++) {
 		if(!Object.keys(this.#dieCache).length){
 			continue
@@ -340,7 +364,6 @@ class WorldOnscreen {
 			console.log("Error: die not available in scene to animate")
 			break
 		}
-		// if the first position index is -1 then this die has been flagged as asleep
 		if(this.diceBufferView[bufferIndex + 1] === -1) {
 			this.handleAsleep(die)
 		} else {
@@ -359,7 +382,6 @@ class WorldOnscreen {
 		bufferIndex = bufferIndex + 8
 	}
 
-	// transfer the buffer back to physics worker
 	requestAnimationFrame(()=>{
 		this.#physicsWorkerPort.postMessage({
 			action: "stepSimulation",
@@ -367,36 +389,38 @@ class WorldOnscreen {
 		}, [this.diceBufferView.buffer])
 	})
 	}
-	
-	// handle the position updates from the physics worker. It's a simple flat array of numbers for quick and easy transfer
+
 	async handleAsleep(die){
 		// mark this die as asleep
 		die.asleep = true
 
-		await Dice.getRollResult(die, this.#scene)
-	
+		// get the roll result for this die; pass config so optional features (highlightResult) can activate
+		await Dice.getRollResult(die, this.#scene, this.config)
+
+		// Feature: number flare — bloom the winning die via the GlowLayer.
+		// Mode 'glow' (default) | 'both' use the flare here; 'light' skips it and
+		// leaves the point-light flare in Dice.#spawnFaceGlow in charge instead.
+		const hlMode = (typeof this.config.highlightResult === 'object' && this.config.highlightResult?.mode) || 'glow'
+		if (this.config.highlightResult && die.mesh && hlMode !== 'light') {
+			this.#startFlare(die)
+		}
+
 		if(die.d10Instance || die.dieParent) {
-			// if one of the pair is asleep and the other isn't then it falls through without getting the roll result
-			// otherwise both dice in the d100 are asleep and ready to calc their roll result
 			if(die?.d10Instance?.asleep || die?.dieParent?.asleep) {
 				const d100 = die.config.sides === 100 ? die : die.dieParent
 				const d10 = die.config.sides === 10 ? die : die.d10Instance
 				if(d100.rawValue){
-					// this die is being processed again for some reason, probably a physics ineration that woke it before it was immobilized
 					d100.value = d100.rawValue
 				}
-				// save the original value
 				d100.rawValue = d100.value
-
 				d100.value = d100.value + d10.value
-	
+
 				this.onRollResult({
 					rollId: d100.config.rollId,
 					value : d100.value
 				})
 			}
 		} else {
-			// turn 0's on a d10 into a 10
 			if(die.config.sides === 10 && die.value === 0) {
 				die.value = 10
 			}
@@ -405,12 +429,45 @@ class WorldOnscreen {
 				value: die.value
 			})
 		}
-		// add to the sleeper count
 		this.#sleeperCount++
 	}
-	
+
+	// Feature: number flare — lazily create the GlowLayer the first time a flare fires.
+	// The selector runs per rendered mesh during the glow pass; non-flaring meshes
+	// return transparent (cheap) so only winning dice bloom. The envelope gives a
+	// fast attack then a long quadratic ease-out — that's the "flare" shape.
+	#ensureGlowLayer() {
+		if (this.#glowLayer) return this.#glowLayer
+		const glow = new GlowLayer('numberFlare', this.#scene, { blurKernelSize: 24 })
+		glow.intensity = 1.0
+		glow.customEmissiveColorSelector = (mesh, subMesh, material, result) => {
+			const f = this.#flares.get(mesh.uniqueId)
+			if (!f) { result.set(0, 0, 0, 0); return }
+			const t = (Date.now() - f.start) / f.duration
+			if (t >= 1) { this.#flares.delete(mesh.uniqueId); result.set(0, 0, 0, 0); return }
+			const env = t < 0.12 ? (t / 0.12) : (1 - ((t - 0.12) / 0.88) ** 2)
+			const k = f.peak * Math.max(0, env)
+			result.set(f.r * k, f.g * k, f.b * k, 1)
+		}
+		this.#glowLayer = glow
+		return glow
+	}
+
+	// Register a winning die to flare. color / intensity / durationMs reuse highlightResult.
+	#startFlare(die) {
+		const opt = (typeof this.config.highlightResult === 'object' && this.config.highlightResult !== null)
+			? this.config.highlightResult : {}
+		const { r, g, b } = hexToRgb(opt.color ?? '#ffeecc')
+		this.#ensureGlowLayer()
+		this.#flares.set(die.mesh.uniqueId, {
+			start: Date.now(),
+			duration: opt.durationMs ?? 3500,
+			peak: opt.intensity ?? 0.9,
+			r, g, b,
+		})
+	}
+
 	resize(options) {
-		// redraw the dicebox
 		const width = this.#canvas.width = options.width
 		const height = this.#canvas.height = options.height
 		this.#container.create({aspect: width / height})
