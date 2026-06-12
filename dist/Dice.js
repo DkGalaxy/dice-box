@@ -34062,35 +34062,24 @@ const He = class He {
   }
 };
 di = new WeakSet(), Es = function(e, t, i, s, r) {
-  const n = typeof r == "object" && r !== null ? r : {}, a = n.color ?? "#ffeecc", o = n.intensity ?? 0.9, h = n.durationMs ?? 3500, c = 0.9;
-  let u;
-  if (t != null && t.hit && t.pickedPoint) {
-    const M = t.pickedPoint.subtract(e.mesh.position);
-    M.scaleInPlace(e.config.scale / c), u = e.mesh.position.add(M);
-  } else {
-    const M = i && e.dieType === "d4" ? -(e.config.scale * 0.6) : e.config.scale * 0.6;
-    u = e.mesh.position.clone().addInPlaceFromFloats(0, M, 0);
-  }
-  const d = e.config.scale * 0.15;
-  u.y += i && e.dieType === "d4" ? -d : d;
-  const g = new Wi(`_glow_light_${e.id}`, u, s), f = ee.FromHexString(a);
-  g.diffuse = f, g.specular = f, g.intensity = o * 20, g.range = e.config.scale * 3;
-  const m = Date.now();
-  let b = !1;
-  const T = () => {
-    if (b) {
-      s.unregisterBeforeRender(T);
+  const n = typeof r == "object" && r !== null ? r : {}, a = n.color ?? "#ffeecc", o = n.intensity ?? 0.9, h = n.durationMs ?? 3500, c = e.mesh.position.clone().addInPlaceFromFloats(0, e.config.scale * 0.75, 0), u = new Wi(`_glow_light_${e.id}`, c, s), d = ee.FromHexString(a);
+  u.diffuse = d, u.specular = d, u.intensity = o * 20, u.range = e.config.scale * 3;
+  const g = Date.now();
+  let f = !1;
+  const m = () => {
+    if (f) {
+      s.unregisterBeforeRender(m);
       return;
     }
-    const M = Math.min(1, (Date.now() - m) / h);
-    if (M >= 1) {
-      s.unregisterBeforeRender(T), g.dispose(), b = !0, e.glowCleanup = null;
+    const b = Math.min(1, (Date.now() - g) / h);
+    if (b >= 1) {
+      s.unregisterBeforeRender(m), u.dispose(), f = !0, e.glowCleanup = null;
       return;
     }
-    g.intensity = o * 20 * (1 - M * M);
+    u.intensity = o * 20 * (1 - b * b);
   };
-  s.registerBeforeRender(T), e.glowCleanup = () => {
-    b || (b = !0, s.unregisterBeforeRender(T), g.dispose());
+  s.registerBeforeRender(m), e.glowCleanup = () => {
+    f || (f = !0, s.unregisterBeforeRender(m), u.dispose());
   };
 }, // Spawn an additive-blended billboard plane at the face centroid and fade it out.
 // Called only when config.highlightResult is truthy — zero cost otherwise.
