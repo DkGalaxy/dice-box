@@ -163,18 +163,12 @@ export function flareWinner(die, scene, hlOption) {
   mat.disableDepthWrite = true
   mat.alphaMode = Constants.ALPHA_ADD
 
-  let flatTint = null
-  if (fx && fx.maskData) {
-    // glyph-shaped flare
-    const tex = getTintedMaskTexture(fx, colorHex, scene)
-    mat.emissiveTexture = tex
-    mat.opacityTexture = tex     // alpha channel = mask — blending stays active
-    mat.emissiveTexture.level = 0
-  } else {
-    // mask not derived (yet) — graceful whole-die flare fallback
-    flatTint = Color3.FromHexString(colorHex)
-    mat.alpha = 0.99 // force blending path
-  }
+  // Whole-die flat glow: the overlay adds a warm additive bloom to the winning
+  // die as a unit. Glyph-texture was removed because the UV atlas contains all
+  // face numbers — applying it lit up every number on every visible face, not
+  // just the rolled result. A whole-die halo is the correct "winner" indicator.
+  const flatTint = Color3.FromHexString(colorHex)
+  mat.alpha = 0.99 // force alpha blending path
   overlay.material = mat
 
   const glow = getGlowLayer(scene, o)
@@ -216,11 +210,7 @@ export function flareWinner(die, scene, hlOption) {
       const t = Math.min(1, (e - attack) / Math.max(1, durationMs - attack))
       env = (1 - t) * (1 - t) * (1 - t) // cubic ease-out
     }
-    if (mat.emissiveTexture) {
-      mat.emissiveTexture.level = maxLevel * env
-    } else if (flatTint) {
-      mat.emissiveColor = flatTint.scale(Math.min(1, env * intensity))
-    }
+    mat.emissiveColor = flatTint.scale(maxLevel * env)
     if (e >= durationMs) cleanup()
   }
   scene.registerBeforeRender(tick)
