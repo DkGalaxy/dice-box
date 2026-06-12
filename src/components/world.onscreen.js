@@ -13,6 +13,8 @@ class WorldOnscreen {
 	#dieCache = {}
 	#count = 0
 	#sleeperCount = 0
+	#rollCompleteFired = false
+	#glowLoopStopTimer = null
 	#dieRollTimer = []
 	#canvas
 	#engine
@@ -140,27 +142,33 @@ class WorldOnscreen {
 	renderLoop() {
 		// if no dice are awake then stop the render loop and save some CPU power
 		if(this.#sleeperCount && this.#sleeperCount === Object.keys(this.#dieCache).length) {
-			// console.log(`no dice moving`)
-			this.#engine.stopRenderLoop()
+			if (!this.#rollCompleteFired) {
+				this.#rollCompleteFired = true
 
-			// stop the physics engine
-			this.#physicsWorkerPort.postMessage({
-				action: "stopSimulation",
-			})
+				// stop the physics engine
+				this.#physicsWorkerPort.postMessage({ action: "stopSimulation" })
 
-			// trigger callback that roll is complete
-			this.onRollComplete()
+				// trigger callback that roll is complete
+				this.onRollComplete()
 
-			// If highlightResult is configured, keep rendering so glow animations play.
-			// A single die would otherwise stop the engine before the glow rendered even once.
-			if (this.config.highlightResult) {
-				const hlDuration = (typeof this.config.highlightResult === 'object' && this.config.highlightResult !== null)
-					? (this.config.highlightResult.durationMs ?? 3500)
-					: 3500
-				const glowLoop = () => this.#scene.render()
-				this.#engine.runRenderLoop(glowLoop)
-				setTimeout(() => this.#engine.stopRenderLoop(), hlDuration + 200)
+				if (this.config.highlightResult) {
+					// Keep the existing render loop alive for the glow duration — never call
+					// stopRenderLoop + runRenderLoop as that re-initialises the canvas and turns
+					// the screen white. A setTimeout stops the loop cleanly once glows have faded.
+					const hlDuration = (typeof this.config.highlightResult === 'object' && this.config.highlightResult !== null)
+						? (this.config.highlightResult.durationMs ?? 3500)
+						: 3500
+					this.#glowLoopStopTimer = setTimeout(() => {
+						this.#engine.stopRenderLoop()
+						this.#glowLoopStopTimer = null
+					}, hlDuration + 200)
+				} else {
+					this.#engine.stopRenderLoop()
+					return
+				}
 			}
+			// keep rendering so the point-light fade (registerBeforeRender) can run
+			this.#scene.render()
 		}
 		// otherwise keep on rendering
 		else {
@@ -200,18 +208,25 @@ class WorldOnscreen {
 		if(!Object.keys(this.#dieCache).length && !this.#sleeperCount) {
 			return
 		}
+		// cancel the glow-loop stop timer if it's still pending
+		if (this.#glowLoopStopTimer) {
+			clearTimeout(this.#glowLoopStopTimer)
+			this.#glowLoopStopTimer = null
+		}
+		this.#rollCompleteFired = false
 		if(this.diceBufferView.byteLength){
 			this.diceBufferView.fill(0)
 		}
 		this.#dieRollTimer.forEach(timer=>clearTimeout(timer))
 		// stop anything that's currently rendering
 		this.#engine.stopRenderLoop()
-		// remove all dice
+		// remove all dice — also dispose any active point-light glow
 		Object.values(this.#dieCache).forEach(die => {
+			die.glowCleanup?.()
 			if(die.mesh)
 				die.mesh.dispose()
 		})
-		
+
 		// reset storage
 		this.#dieCache = {}
 		this.#count = 0

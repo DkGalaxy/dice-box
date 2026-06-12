@@ -2,9 +2,7 @@ import { SceneLoader } from '@babylonjs/core/Loading/sceneLoader'
 import { Vector3 } from '@babylonjs/core/Maths/math.vector'
 import { Color3 } from '@babylonjs/core/Maths/math.color'
 import { Ray } from "@babylonjs/core/Culling/ray";
-import { MeshBuilder } from '@babylonjs/core/Meshes/meshBuilder'
-import { StandardMaterial } from '@babylonjs/core/Materials/standardMaterial'
-import { DynamicTexture } from '@babylonjs/core/Materials/Textures/dynamicTexture'
+import { PointLight } from '@babylonjs/core/Lights/pointLight'
 // import { RayHelper } from '@babylonjs/core/Debug';
 import '../helpers/babylonFileLoader'
 import '@babylonjs/core/Meshes/instancedMesh'
@@ -288,39 +286,16 @@ class Dice {
     const nudge = (d4FaceDown && d.dieType === 'd4') ? -0.12 : 0.12
     faceCenter.y += nudge
 
-    // Build the billboard plane — size scales with the die so it fits all die types
-    const glowSize = d.config.scale * 2.4
-    const glowMesh = MeshBuilder.CreatePlane(`_glow_${d.id}`, { size: glowSize }, scene)
-    glowMesh.position    = faceCenter
-    glowMesh.billboardMode = 7 // Mesh.BILLBOARDMODE_ALL — always faces the camera
-    glowMesh.isPickable  = false
+    // Point light at the face centroid — illuminates only the winning face from close up.
+    // Avoids geometry artifacts (no billboard plane, no white ring) and feels natural.
+    const light = new PointLight(`_glow_light_${d.id}`, faceCenter, scene)
+    const c3 = Color3.FromHexString(color)
+    light.diffuse         = c3
+    light.specular        = c3
+    light.intensity       = intensity * 10 // point lights need higher intensity than material alpha
+    light.range           = d.config.scale * 2.8
+    light.includedOnlyMeshes = [d.mesh]   // only lights this die, not the floor/walls
 
-    // Radial-gradient texture: hard white ring was caused by a solid square plane with
-    // additive blending — the plane's corners bled onto the dark background. A circular
-    // gradient fades the glow to fully transparent at the edges, eliminating the ring.
-    const texSize = 128
-    const glowTex = new DynamicTexture(`_glow_tex_${d.id}`, { width: texSize, height: texSize }, scene, false)
-    const ctx2d = glowTex.getContext()
-    const half = texSize / 2
-    const grad = ctx2d.createRadialGradient(half, half, 0, half, half, half)
-    const [r, g, b] = Color3.FromHexString(color).toArray().map(v => Math.round(v * 255))
-    grad.addColorStop(0,   `rgba(${r},${g},${b},1)`)
-    grad.addColorStop(0.55, `rgba(${r},${g},${b},0.6)`)
-    grad.addColorStop(1,   `rgba(${r},${g},${b},0)`)
-    ctx2d.fillStyle = grad
-    ctx2d.fillRect(0, 0, texSize, texSize)
-    glowTex.update()
-
-    const glowMat = new StandardMaterial(`_glow_mat_${d.id}`, scene)
-    glowMat.emissiveTexture  = glowTex
-    glowMat.opacityTexture   = glowTex
-    glowMat.disableLighting  = true
-    glowMat.backFaceCulling  = false
-    glowMat.alpha            = intensity
-    glowMat.alphaMode        = 6 // Engine.ALPHA_ADD — additive blending, composited in-scene
-    glowMesh.material        = glowMat
-
-    // Ease-out fade registered on the Babylon render loop
     const startTime = Date.now()
     let disposed = false
     const fade = () => {
@@ -328,16 +303,25 @@ class Dice {
       const t = Math.min(1, (Date.now() - startTime) / durationMs)
       if (t >= 1) {
         scene.unregisterBeforeRender(fade)
-        glowMesh.dispose()
-        glowMat.dispose()
-        glowTex.dispose()
+        light.dispose()
         disposed = true
+        d.glowCleanup = null
         return
       }
       // quadratic ease-out: fast-bright → soft-dim
-      glowMat.alpha = intensity * (1 - t * t)
+      light.intensity = intensity * 10 * (1 - t * t)
     }
     scene.registerBeforeRender(fade)
+
+    // Cleanup hook so world.onscreen clear() can dispose the light if the user
+    // clears dice before the fade finishes
+    d.glowCleanup = () => {
+      if (!disposed) {
+        disposed = true
+        scene.unregisterBeforeRender(fade)
+        light.dispose()
+      }
+    }
   }
 }
 
