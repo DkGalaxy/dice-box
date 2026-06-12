@@ -2,7 +2,6 @@ import { SceneLoader } from '@babylonjs/core/Loading/sceneLoader'
 import { Vector3 } from '@babylonjs/core/Maths/math.vector'
 import { Color3 } from '@babylonjs/core/Maths/math.color'
 import { Ray } from "@babylonjs/core/Culling/ray";
-import { PointLight } from '@babylonjs/core/Lights/pointLight'
 // import { RayHelper } from '@babylonjs/core/Debug';
 import '../helpers/babylonFileLoader'
 import '@babylonjs/core/Meshes/instancedMesh'
@@ -208,8 +207,7 @@ class Dice {
     return Dice.vector3
   }
 
-  // config is optional; pass it to enable highlightResult glow
-  static async getRollResult(die, scene, config) {
+  static async getRollResult(die, scene) {
     // TODO: Why a function in a function?? fix this
     const getDieRoll = (d=die) => new Promise((resolve,reject) => {
 
@@ -251,11 +249,6 @@ class Dice {
         d.value = 0
       }
 
-      // Feature: highlightResult — glow billboard at the winning face centroid
-      if (config?.highlightResult) {
-        Dice.#spawnFaceGlow(d, picked, d4FaceDown, scene, config.highlightResult)
-      }
-
       return resolve(d.value)
     }).catch(error => console.error(error))
 
@@ -264,60 +257,6 @@ class Dice {
     }
     
     return await getDieRoll()
-  }
-  // Spawn an additive-blended billboard plane at the face centroid and fade it out.
-  // Called only when config.highlightResult is truthy — zero cost otherwise.
-  static #spawnFaceGlow(d, picked, d4FaceDown, scene, hlOption) {
-    const hlConfig  = (typeof hlOption === 'object' && hlOption !== null) ? hlOption : {}
-    const color     = hlConfig.color      ?? '#ffeecc'
-    const intensity = hlConfig.intensity  ?? 0.9
-    const durationMs = hlConfig.durationMs ?? 3500
-
-    // Place the light directly above the die center. The face-centroid approach amplified
-    // any X/Z offset by scale/0.9 ≈ 6.67×: a die settled at even a small angle pushed the
-    // light sideways off the mesh where N·L ≤ 0. A fixed +Y offset always illuminates the
-    // camera-facing top face (the result face) regardless of how the die landed.
-    const faceCenter = d.mesh.position.clone().addInPlaceFromFloats(0, d.config.scale * 0.75, 0)
-
-    // Point light at the face centroid — illuminates the winning face from close up.
-    // includedOnlyMeshes is intentionally NOT set: d.mesh is the root/parent node and
-    // setting it would exclude the actual geometry child meshes, making the light invisible.
-    // The limited range already confines it to the immediate die area.
-    const light = new PointLight(`_glow_light_${d.id}`, faceCenter, scene)
-    const c3 = Color3.FromHexString(color)
-    light.diffuse   = c3
-    light.specular  = c3
-    light.intensity = intensity * 20
-    light.range     = d.config.scale * 3
-
-    const startTime = Date.now()
-    let disposed = false
-    const fade = () => {
-      if (disposed) { scene.unregisterBeforeRender(fade); return }
-      const t = Math.min(1, (Date.now() - startTime) / durationMs)
-      if (t >= 1) {
-        scene.unregisterBeforeRender(fade)
-        light.dispose()
-        disposed = true
-        d.glowCleanup = null
-        return
-      }
-      // quadratic ease-out: fast-bright → soft-dim
-      // (must use the same 20x boost as the initial assignment — this callback runs on
-      // the very first rendered frame, so a lower multiplier here silently overrides it)
-      light.intensity = intensity * 20 * (1 - t * t)
-    }
-    scene.registerBeforeRender(fade)
-
-    // Cleanup hook so world.onscreen clear() can dispose the light if the user
-    // clears dice before the fade finishes
-    d.glowCleanup = () => {
-      if (!disposed) {
-        disposed = true
-        scene.unregisterBeforeRender(fade)
-        light.dispose()
-      }
-    }
   }
 }
 
